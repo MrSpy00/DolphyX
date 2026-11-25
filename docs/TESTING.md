@@ -8,7 +8,20 @@
 
 **Result:** 35/35 passing, 0 failures, 0 skipped.
 
-**Device verification (25 Nov 2026):** 14 routes opened on Honor Magic `PTP-N49` (Android 16 / API 36) at 100% and 130% system font scale, in Turkish and English, dark and light themes. No fatal exceptions. LAN scanning is blocked while a VPN is active to prevent virtual hosts from being reported as real devices.
+**Device verification (25 Nov 2026, v2.2.1):** 14 routes opened on Honor Magic `PTP-N49`
+(Android 16 / API 36) at 100% and 130% system font scale, in Turkish and English, dark and
+light themes. No fatal exceptions.
+
+Interaction checks run on the same build:
+
+| Check | Method | Result |
+| :--- | :--- | :--- |
+| Dock navigation | Tapped each slot in order (Bluetooth → İşlevler → Ayarlar) | Correct screen every time |
+| NFC segmented tabs | Tapped Oku / Yaz / Emüle / Kasa and asserted tab body | Correct body each time |
+| IR segmented tabs | Tapped Gözat / Evrensel / Favoriler / Özel | Correct body each time |
+| Tools catalogue | Tapped every row from the first screen and after scrolling | All rows reached their route |
+| Theme switch | Tapped Sistem / Koyu / Açık in settings | Applied without restart |
+| LAN under VPN | Opened scanner with an active VPN | Scan disabled, explicit warning, no fake hosts |
 
 | Suite | Tests | Coverage |
 | :--- | :---: | :--- |
@@ -29,8 +42,8 @@
 ```
 
 - Debug APK: `app/build/outputs/apk/debug/app-debug.apk`
-- Release APK: `app/build/outputs/apk/release/app-release-unsigned.apk`
-- Release size: 19.05 MiB (19,975,633 bytes, unsigned)
+- Release APK: `app/build/outputs/apk/release/app-release.apk` (signed when `keystore.properties` exists)
+- Release size: 19.09 MiB (20,020,141 bytes, signed, v2.2.1)
 - SDK: min 26 / target 36 / compile 36; Java 17
 
 ## Device smoke test
@@ -72,4 +85,6 @@ Additional live checks:
 
 ## Reproducible screenshots
 
-Screenshots in [`docs/screenshots`](screenshots) were captured on the device above with the debug build. Use `adb shell screencap -p` and crop status/notification overlays if needed.
+Screenshots in [`docs/screenshots`](screenshots) were captured on the device above with the
+release build at 100% font scale in the system dark theme. Use `adb shell screencap -p`;
+cropping is unnecessary because the app draws edge-to-edge itself.

@@ -1,7 +1,7 @@
 # DolphyX — Project Overview
 
 > **Project:** DolphyX — monochrome hardware & RF diagnostic suite for Android
-> **Package:** `com.aegissoft.dolphyx` · **Version:** 2.1.0 (`versionCode 3`)
+> **Package:** `com.aegissoft.dolphyx` · **Version:** 2.2.1 (`versionCode 5`)
 > **Organization:** aegisSoft · **Lead developer:** mrSpy · **License:** GPL-3.0
 > **Upstream:** [unvoiddd/Dolphy-App](https://github.com/unvoiddd/Dolphy-App)
 
@@ -15,7 +15,7 @@ No root, no cloud account, no analytics.
 
 ```text
 app/src/main/java/com/aegissoft/dolphyx/
-├── MainActivity.kt                  # Edge-to-edge shell, capsule dock, 14 routes
+├── MainActivity.kt                  # Edge-to-edge shell, fixed-slot capsule dock, 14 routes
 ├── core/
 │   ├── config/                      # BuildConfig-backed central configuration
 │   ├── security/                    # Keystore AES-256-GCM, encrypted preferences
@@ -30,8 +30,8 @@ app/src/main/java/com/aegissoft/dolphyx/
 │   ├── network/                     # LAN, DNS/TLS, mDNS, IPP, RTSP, QR
 │   └── plugin/                      # Manifest verification, allowlist
 └── ui/
-    ├── theme/                       # Monochrome tokens, accents, fonts, scale
-    ├── components/                  # Cards, headers, pills, dock, rows
+    ├── theme/                       # Monochrome tokens, accents, dynamic colour, fonts, scale
+    ├── components/                  # Cards, headers, segments, dock, dropdowns, rows
     ├── widget/                      # Home-screen shortcut widget
     └── screens/                     # 14 screens
 ```
@@ -70,3 +70,16 @@ All branding, URLs, asset names, and default limits live in `gradle.properties` 
 ```
 
 See [TESTING.md](TESTING.md) for verification details.
+
+## Release history
+
+| Version | Date | Summary |
+| :--- | :--- | :--- |
+| 2.2.1 (`versionCode 5`) | 2026-11-25 | Dock navigation fix, no rectangular ripple edges, real interface identity under VPN, plugin meta strings, 540-key parity |
+| 2.2.0 (`versionCode 4`) | 2026-11-25 | Adaptive layout pass, light/dark/system themes, six accents + Material You, Aseprite logo, honest state reporting |
+| 2.1.0 (`versionCode 3`) | 2026-11 | Monochrome rebuild, BLE chat, IR import, camera discovery, DLNA cast, IPP printing |
+| 2.0.0 | 2026-11 | Feature-parity pass on the clean-room rewrite |
+
+## Signing
+
+The release keystore (`keystore/dolphyx.p12`) and `keystore.properties` stay untracked. Keep an offline backup: losing them prevents shipping updates under the same application id. CI can supply `DOLPHYX_KEYSTORE_PATH`, `DOLPHYX_KEYSTORE_PASSWORD`, `DOLPHYX_KEYSTORE_ALIAS`, and `DOLPHYX_KEY_PASSWORD` instead.

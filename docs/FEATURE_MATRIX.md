@@ -1,12 +1,12 @@
-﻿# Feature Matrix
+# Feature Matrix
 
-Status legend: **Complete** Ã‚Â· **Partial** Ã‚Â· **Planned** Ã‚Â· **Out of scope (defensive)**
+Status legend: **Complete** · **Partial** · **Planned** · **Out of scope (defensive)**
 
 | Area | Feature | Status | Module |
 | :--- | :--- | :---: | :--- |
-| Navigation | 3-tab capsule dock, expanding tab, square FAB | Complete | `MainActivity`, `DolphyFloatingDock` |
-| Design | Monochrome OLED, 28dp cards, white pills, pixel art | Complete | `Theme.kt`, `DolphyXComponents.kt` |
-| Personalisation | 5 accents, pixel font, UI scale, reduce motion | Complete | `SettingsScreen`, `Theme.kt` |
+| Navigation | 3-tab capsule dock with fixed hit targets, animated selection, square FAB | Complete | `MainActivity`, `DolphyFloatingDock` |
+| Design | Monochrome OLED, 28dp cards, white pills, pixel art, Material `Surface` interactions | Complete | `Theme.kt`, `DolphyXComponents.kt` |
+| Personalisation | Light/dark/system, 6 accents + Material You, pixel font, UI scale, reduce motion | Complete | `SettingsScreen`, `Theme.kt` |
 | Functions | Containers/Tiles, Standard/Compact | Complete | `ToolsScreen` |
 | Localisation | Turkish + English, 540 keys | Complete | `values/`, `values-tr/` |
 | BLE | Scan, bonded-first, RSSI, OUI, GATT | Complete | `BleDiagnosticEngine` |
@@ -18,8 +18,8 @@ Status legend: **Complete** Ã‚Â· **Partial** Ã‚Â· **Planned** Ã‚Â�
 | NFC | Read, NDEF write, erase, encrypted vault | Complete | `NfcEngine`, `NfcWriterEngine`, `NfcVaultRepository` |
 | NFC | Type-4 HCE profiles | Complete | `DolphyXHceService` |
 | HID | Keyboard, media, trackpad | Complete | `BluetoothHidController`, `HidRemoteScreen` |
-| Network | Interface summary, TCP probe, HTTPS check | Complete | `NetworkDiagnosticEngine`, `NetworkQrScreen` |
-| Network | `/24` LAN scan, DNS/TLS | Complete | `LanScannerEngine` |
+| Network | Interface summary (real Wi-Fi under VPN), TCP probe, HTTPS check | Complete | `NetworkDiagnosticEngine`, `NetworkQrScreen` |
+| Network | `/24` LAN scan (blocked under VPN), DNS/TLS | Complete | `LanScannerEngine` |
 | Printer | IPP/AirPrint discovery | Complete | `PrinterDiscoveryEngine` |
 | Printer | IPP Print-Job (PDF/text/image) | Complete | `IppPrintClient` |
 | Camera | RTSP/ONVIF discovery, manual URL | Complete | `CameraDiscoveryEngine`, `CameraScreen` |
@@ -31,7 +31,7 @@ Status legend: **Complete** Ã‚Â· **Partial** Ã‚Â· **Planned** Ã‚Â�
 | Widget | IR/NFC/app shortcuts | Complete | `DolphyXQuickWidgetProvider` |
 | Smart home | ELK-BLEDOM LED strip | Planned | Protocol needs hardware validation |
 | Scooter | Read-only telemetry | Planned | Protocol needs hardware validation |
-| Security | BLE spam/jammer, TWS hijack, BadUSB, phishing, brute force, unrestricted code execution | Out of scope | Ã¢â‚¬â€ |
+| Security | BLE spam/jammer, TWS hijack, BadUSB, phishing, brute force, unrestricted code execution | Out of scope | - |
 | Security | IR jammer category | Out of scope | Filtered from IRDB queries |
 
 ## Known limits
