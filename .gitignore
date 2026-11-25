@@ -1,0 +1,42 @@
+# Build and IDE
+.gradle/
+.kotlin/
+build/
+app/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.iml
+.idea/
+.vscode/
+
+# Local machine configuration and secrets
+local.properties
+keystore.properties
+*.jks
+*.keystore
+*.p12
+*.pfx
+.env
+.env.*
+
+# Generated APK/AAB and test output
+*.apk
+*.aab
+*.ap_
+release/
+app/release/
+test-results/
+reports/
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Local signing material and IDE scratch
+keystore/
+

@@ -1,0 +1,40 @@
+{
+  "id": "com.aegissoft.dolphyx.plugin.hardware_health",
+  "name": "Hardware Health Check",
+  "version": "1.0.0",
+  "author": "aegisSoft",
+  "description": "Read-only diagnostic summary of device BLE, NFC, IR, and Wi-Fi hardware readiness.",
+  "capabilities": [
+    "hardware.status",
+    "irdb.stats"
+  ],
+  "ui": [
+    {
+      "type": "header",
+      "title": "Hardware Readiness",
+      "value": "Android 16 / Honor MagicOS"
+    },
+    {
+      "type": "badge",
+      "title": "Sandbox Mode",
+      "value": "READ_ONLY_VERIFIED"
+    },
+    {
+      "type": "metric",
+      "title": "Subsystems",
+      "value": "BLE + NFC/HCE + ConsumerIR + Wi-Fi"
+    },
+    {
+      "type": "text",
+      "title": "Policy",
+      "value": "Zero shell, zero reflection, zero dynamic DEX execution."
+    },
+    {
+      "type": "button",
+      "title": "Refresh Hardware Snapshot",
+      "value": "refresh_hardware",
+      "action": "hardware.refresh"
+    }
+  ],
+  "contentSha256": "a55706fcb9afa0c1a2b4934f42b0b64866f8cce1b201b0c91016a08af186fd4d"
+}

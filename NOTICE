@@ -1,0 +1,24 @@
+DolphyX
+=======
+
+This repository is a modified version of Dolphy-App:
+  https://github.com/unvoiddd/Dolphy-App
+  Copyright (C) the Dolphy-App contributors
+  Licensed under the GNU General Public License v3.0
+
+Modifications:
+  - Rebuilt and extended by aegisSoft / mrSpy (MrSpy00), 2026.
+  - New monochrome design system based on the original app's design language.
+  - Added BLE chat, Flipper .ir import, RTSP camera discovery, DLNA cast,
+    IPP Print-Job, QR sharing, and Turkish localisation.
+  - Removed attack/abuse modules (BLE spam/jammer, TWS hijack, BadUSB,
+    phishing, unauthorized brute force, unrestricted code execution).
+  - Hardened storage, exported components, permissions, and local networking.
+  - Added unit tests and documentation.
+
+The full license text is in LICENSE (GNU GPL v3.0). This notice is provided
+to satisfy the "prominent notices stating that you modified it" requirement
+of GPL-3.0 section 5(a).
+
+Upstream project: https://github.com/unvoiddd/Dolphy-App
+This project:    https://github.com/MrSpy00/DolphyX

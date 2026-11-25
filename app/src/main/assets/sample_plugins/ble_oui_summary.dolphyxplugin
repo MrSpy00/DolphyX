@@ -1,0 +1,40 @@
+{
+  "id": "com.aegissoft.dolphyx.plugin.ble_oui_summary",
+  "name": "BLE & OUI Summary",
+  "version": "1.0.0",
+  "author": "aegisSoft",
+  "description": "Displays live BLE scan/bonded device counts and local SQLite OUI vendor database stats.",
+  "capabilities": [
+    "ble.summary",
+    "oui.stats"
+  ],
+  "ui": [
+    {
+      "type": "header",
+      "title": "BLE & OUI Telemetry",
+      "value": "Local SQLite OUI Index"
+    },
+    {
+      "type": "badge",
+      "title": "Transport",
+      "value": "TRANSPORT_LE (API >= 23)"
+    },
+    {
+      "type": "metric",
+      "title": "OUI Lookup",
+      "value": "Indexed 6-Hex Prefix"
+    },
+    {
+      "type": "text",
+      "title": "Usage",
+      "value": "Resolves bonded and scanned BLE MAC prefixes offline."
+    },
+    {
+      "type": "button",
+      "title": "Sync BLE Summary",
+      "value": "sync_ble",
+      "action": "ble.summary"
+    }
+  ],
+  "contentSha256": "708fb34bdbc1a8a94cacd09cccbcb63b4bf76808ccf64d27bc1acd3ea4bc0fbf"
+}

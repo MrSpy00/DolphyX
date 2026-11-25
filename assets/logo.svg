@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" role="img" aria-label="DolphyX logo">
+  <rect width="240" height="240" rx="48" fill="#0A0A0A"/>
+  <circle cx="120" cy="120" r="96" fill="#2A2A2A"/>
+  <path d="M120 42 L174 74 V138 L120 170 L66 138 V74 Z" fill="none" stroke="#F4F4F4" stroke-width="6"/>
+  <g fill="#F4F4F4">
+    <rect x="86" y="98" width="8" height="8"/>
+    <rect x="94" y="98" width="8" height="8"/>
+    <rect x="102" y="98" width="8" height="8"/>
+    <rect x="110" y="98" width="8" height="8"/>
+    <rect x="118" y="98" width="8" height="8"/>
+    <rect x="126" y="98" width="8" height="8"/>
+    <rect x="134" y="98" width="8" height="8"/>
+    <rect x="142" y="98" width="8" height="8"/>
+    <rect x="150" y="98" width="8" height="8"/>
+    <rect x="78" y="106" width="8" height="8"/>
+    <rect x="86" y="106" width="8" height="8"/>
+    <rect x="94" y="106" width="8" height="8"/>
+    <rect x="102" y="106" width="8" height="8"/>
+    <rect x="110" y="106" width="8" height="8"/>
+    <rect x="118" y="106" width="8" height="8"/>
+    <rect x="126" y="106" width="8" height="8"/>
+    <rect x="134" y="106" width="8" height="8"/>
+    <rect x="142" y="106" width="8" height="8"/>
+    <rect x="150" y="106" width="8" height="8"/>
+    <rect x="158" y="106" width="8" height="8"/>
+    <rect x="86" y="114" width="8" height="8"/>
+    <rect x="94" y="114" width="8" height="8"/>
+    <rect x="102" y="114" width="8" height="8"/>
+    <rect x="110" y="114" width="8" height="8"/>
+    <rect x="118" y="114" width="8" height="8"/>
+    <rect x="126" y="114" width="8" height="8"/>
+    <rect x="134" y="114" width="8" height="8"/>
+    <rect x="142" y="114" width="8" height="8"/>
+    <rect x="150" y="114" width="8" height="8"/>
+    <rect x="158" y="114" width="8" height="8"/>
+    <rect x="94" y="122" width="8" height="8"/>
+    <rect x="102" y="122" width="8" height="8"/>
+    <rect x="110" y="122" width="8" height="8"/>
+    <rect x="118" y="122" width="8" height="8"/>
+    <rect x="126" y="122" width="8" height="8"/>
+    <rect x="134" y="122" width="8" height="8"/>
+    <rect x="142" y="122" width="8" height="8"/>
+    <rect x="150" y="122" width="8" height="8"/>
+    <rect x="102" y="130" width="8" height="8"/>
+    <rect x="110" y="130" width="8" height="8"/>
+    <rect x="118" y="130" width="8" height="8"/>
+    <rect x="126" y="130" width="8" height="8"/>
+    <rect x="134" y="130" width="8" height="8"/>
+    <rect x="142" y="130" width="8" height="8"/>
+    <rect x="110" y="138" width="8" height="8"/>
+    <rect x="118" y="138" width="8" height="8"/>
+    <rect x="126" y="138" width="8" height="8"/>
+  </g>
+  <g fill="#9C9C9C">
+    <rect x="62" y="122" width="8" height="8"/>
+    <rect x="54" y="130" width="8" height="8"/>
+    <rect x="46" y="138" width="8" height="8"/>
+    <rect x="170" y="114" width="8" height="8"/>
+    <rect x="178" y="122" width="8" height="8"/>
+    <rect x="170" y="130" width="8" height="8"/>
+    <rect x="178" y="138" width="8" height="8"/>
+  </g>
+</svg>
