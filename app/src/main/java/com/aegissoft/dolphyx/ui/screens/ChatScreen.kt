@@ -127,17 +127,20 @@ fun ChatScreen(onBack: () -> Unit) {
                             },
                         )
                     } else {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
                             DolphyPrimaryPillButton(
                                 text = if (hosting) stringResource(R.string.chat_stop_host) else stringResource(R.string.chat_host),
                                 icon = if (hosting) Icons.Rounded.Stop else Icons.Rounded.WifiTethering,
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.fillMaxWidth(),
                                 onClick = { if (hosting) engine.stopHosting() else engine.startHosting() },
                             )
                             DolphyPrimaryPillButton(
                                 text = if (scanning) stringResource(R.string.action_stop) else stringResource(R.string.chat_find),
                                 icon = if (scanning) Icons.Rounded.Stop else Icons.Rounded.Radar,
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.fillMaxWidth(),
                                 onClick = { if (scanning) engine.stopScan() else engine.startScan() },
                             )
                         }

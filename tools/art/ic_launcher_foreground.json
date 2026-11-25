@@ -1,0 +1,27 @@
+{ "frames": [
+   {
+    "filename": "ic_launcher_foreground.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 432, "h": 432 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 432, "h": 432 },
+    "sourceSize": { "w": 432, "h": 432 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.17-x64",
+  "image": "ic_launcher_foreground.png",
+  "format": "RGBA8888",
+  "size": { "w": 432, "h": 432 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "foreground", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

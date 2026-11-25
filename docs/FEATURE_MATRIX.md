@@ -8,7 +8,7 @@ Status legend: **Complete** Â· **Partial** Â· **Planned** Â· **Out of scop
 | Design | Monochrome OLED, 28dp cards, white pills, pixel art | Complete | `Theme.kt`, `DolphyXComponents.kt` |
 | Personalisation | 5 accents, pixel font, UI scale, reduce motion | Complete | `SettingsScreen`, `Theme.kt` |
 | Functions | Containers/Tiles, Standard/Compact | Complete | `ToolsScreen` |
-| Localisation | Turkish + English, 517 keys | Complete | `values/`, `values-tr/` |
+| Localisation | Turkish + English, 536 keys | Complete | `values/`, `values-tr/` |
 | BLE | Scan, bonded-first, RSSI, OUI, GATT | Complete | `BleDiagnosticEngine` |
 | Chat | BLE GATT nearby chat | Complete | `BleChatEngine`, `ChatScreen` |
 | IR | 2,460 remotes / 58,766 signals, 45 categories | Complete | `IrDatabaseHelper`, `IrRemoteScreen` |

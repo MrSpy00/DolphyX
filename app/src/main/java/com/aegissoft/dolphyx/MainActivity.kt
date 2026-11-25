@@ -7,11 +7,19 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
+import android.graphics.drawable.ColorDrawable
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +31,9 @@ import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.IntentCompat
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -127,6 +139,8 @@ class MainActivity : ComponentActivity() {
                 SecurePreferences.ACCENT_RED -> DolphyAccent.RED
                 SecurePreferences.ACCENT_GREEN -> DolphyAccent.GREEN
                 SecurePreferences.ACCENT_PURPLE -> DolphyAccent.PURPLE
+                SecurePreferences.ACCENT_CYAN -> DolphyAccent.CYAN
+                SecurePreferences.ACCENT_DYNAMIC -> DolphyAccent.DYNAMIC
                 else -> DolphyAccent.RAINBOW
             }
             DolphyXTheme(
@@ -136,6 +150,15 @@ class MainActivity : ComponentActivity() {
                 reduceMotion = reduceMotion,
                 flipperFont = flipperFont,
             ) {
+                val view = LocalView.current
+                val windowBackground = MaterialTheme.colorScheme.background
+                SideEffect {
+                    window.setBackgroundDrawable(ColorDrawable(windowBackground.toArgb()))
+                    WindowCompat.getInsetsController(window, view).apply {
+                        isAppearanceLightStatusBars = !darkTheme
+                        isAppearanceLightNavigationBars = !darkTheme
+                    }
+                }
                 DolphyXAppShell(
                     viewModel = viewModel,
                     onRequestPermissions = ::requestHardwarePermissions,
@@ -203,6 +226,7 @@ private fun DolphyXAppShell(
     val currentRoute = navBackStackEntry?.destination?.route ?: DolphyRoutes.HOME
     val fabVisible by viewModel.fabVisible.collectAsState()
     val fabAction by viewModel.fabAction.collectAsState()
+    val reduceMotion by viewModel.reduceMotion.collectAsState()
 
     LaunchedEffect(initialRoute) {
         if (!initialRoute.isNullOrBlank()) {
@@ -241,7 +265,9 @@ private fun DolphyXAppShell(
                     val target = if (fabAction == SecurePreferences.FAB_ACTION_SETTINGS) DolphyRoutes.SETTINGS else DolphyRoutes.TOOLS
                     navController.navigate(target) { launchSingleTop = true }
                 },
-                fabContentDescription = stringResource(R.string.nav_tools),
+                fabContentDescription = stringResource(
+                    if (fabAction == SecurePreferences.FAB_ACTION_SETTINGS) R.string.nav_settings else R.string.nav_tools,
+                ),
                 showFab = fabVisible,
             )
         },
@@ -254,6 +280,26 @@ private fun DolphyXAppShell(
             NavHost(
                 navController = navController,
                 startDestination = DolphyRoutes.HOME,
+                enterTransition = {
+                    if (reduceMotion) {
+                        EnterTransition.None
+                    } else {
+                        fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 14 }
+                    }
+                },
+                exitTransition = {
+                    if (reduceMotion) ExitTransition.None else fadeOut(tween(150))
+                },
+                popEnterTransition = {
+                    if (reduceMotion) EnterTransition.None else fadeIn(tween(200))
+                },
+                popExitTransition = {
+                    if (reduceMotion) {
+                        ExitTransition.None
+                    } else {
+                        fadeOut(tween(150)) + slideOutHorizontally(tween(200)) { it / 14 }
+                    }
+                },
             ) {
                 composable(DolphyRoutes.HOME) {
                     HomeScreen(

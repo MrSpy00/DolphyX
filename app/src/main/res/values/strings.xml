@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DolphyX</string>
-    <string name="app_subtitle">aegisSoft Hardware &amp; RF Diagnostic Suite</string>
+    <string name="app_subtitle">Hardware &amp; RF diagnostics</string>
     <string name="hce_service_description">DolphyX NFC Type 4 Diagnostic Emulation</string>
     <string name="hce_aid_group_description">NDEF Type 4 Tag Diagnostic AID</string>
 
@@ -38,9 +38,9 @@
     <string name="dashboard_title">Hardware Command Center</string>
     <string name="dashboard_device_model">Device Model</string>
     <string name="dashboard_android_version">Android SDK</string>
-    <string name="dashboard_battery_opt">Battery Optimization</string>
-    <string name="dashboard_battery_exempt">Exempt (Unrestricted)</string>
-    <string name="dashboard_battery_restricted">Restricted (PowerGenie Risk)</string>
+    <string name="dashboard_battery_opt">Battery exemption</string>
+    <string name="dashboard_battery_exempt">Battery exempt</string>
+    <string name="dashboard_battery_restricted">Restricted (PowerGenie risk)</string>
     <string name="dashboard_request_battery_exempt">Request Exemption</string>
     <string name="dashboard_service_status">Hardware Service</string>
     <string name="dashboard_start_service">Start</string>
@@ -67,7 +67,13 @@
 
     <!-- NFC Screen -->
     <string name="nfc_title">NFC Tools</string>
+    <string name="nfc_subtitle">Read, write and emulate tags</string>
     <string name="nfc_hardware_status">NFC Hardware</string>
+    <string name="nfc_hardware_available">Hardware available</string>
+    <string name="nfc_hardware_missing">No NFC hardware</string>
+    <string name="nfc_adapter_on">NFC on</string>
+    <string name="nfc_adapter_off">NFC off</string>
+    <string name="nfc_hce_locked">HCE needs unlock</string>
     <string name="nfc_hce_status">HCE Emulation (Unlock Required)</string>
     <string name="nfc_last_tag">Last Detected Tag</string>
     <string name="nfc_uid_label">UID</string>
@@ -76,6 +82,9 @@
     <string name="nfc_ndef_write_title">HCE Diagnostic NDEF Payload</string>
     <string name="nfc_ndef_hint">Enter diagnostic text or HTTPS URL</string>
     <string name="nfc_apply_hce">Apply to HCE</string>
+    <string name="nfc_waiting_title">Waiting for a tag</string>
+    <string name="ble_subtitle">Scan, GATT and connection control</string>
+    <string name="ir_subtitle">Local database and key transmission</string>
     <string name="nfc_tap_prompt">Hold an NFC tag near the device to inspect its UID, technologies, and NDEF records.</string>
 
     <!-- IR Screen -->
@@ -90,7 +99,8 @@
     <string name="ir_empty_results">No matching remotes found in IRDB.</string>
 
     <!-- Network & QR Screen -->
-    <string name="network_title">Network &amp; QR Diagnostics</string>
+    <string name="network_title">Network &amp; QR</string>
+    <string name="network_subtitle">Network info, port probe and QR sharing</string>
     <string name="network_wifi_info">Wi-Fi Interface</string>
     <string name="network_ip_address">Local IP</string>
     <string name="network_gateway">Gateway</string>
@@ -194,7 +204,7 @@
     <string name="tools_category_network">Network</string>
     <string name="tools_category_system">System</string>
     <string name="tool_ir_title">IR Remotes</string>
-    <string name="tool_ir_desc">Browse 2,400+ remotes, transmit keys and favorites</string>
+    <string name="tool_ir_desc">Local IR database, key transmission and favorites</string>
     <string name="tool_nfc_title">NFC Tools</string>
     <string name="tool_nfc_desc">Read tags, write NDEF, emulate a card</string>
     <string name="tool_network_title">Network</string>
@@ -220,11 +230,18 @@
     <string name="appearance_accent">Accent color</string>
     <string name="appearance_accent_hint">Six original palettes plus Android dynamic color</string>
     <string name="accent_orange">Dolphy</string>
+    <string name="accent_rainbow">Rainbow</string>
     <string name="accent_red">Red</string>
     <string name="accent_green">Green</string>
     <string name="accent_purple">Purple</string>
     <string name="accent_cyan">Cyan</string>
-    <string name="accent_adaptive">Adaptive</string>
+    <string name="accent_adaptive">Material You</string>
+    <string name="status_blocked">Blocked</string>
+    <string name="status_allowed">Allowed</string>
+    <string name="status_required">Required</string>
+    <string name="security_cleartext">Cleartext HTTP</string>
+    <string name="security_backup">AllowBackup</string>
+    <string name="security_hce_unlock">HCE unlock</string>
     <string name="appearance_text_scale">Text scale</string>
     <string name="appearance_text_scale_hint">Applies to every screen instantly</string>
     <string name="appearance_text_scale_value">%1$d%%</string>
@@ -318,7 +335,7 @@
     <string name="tool_hid_title">HID Remote</string>
     <string name="tool_hid_desc">Keyboard, media keys and trackpad on a paired PC</string>
     <string name="hid_title">HID Remote</string>
-    <string name="hid_subtitle">Bluetooth keyboard, media and trackpad for your own host</string>
+    <string name="hid_subtitle">Keyboard, media and trackpad for a paired PC</string>
     <string name="hid_not_supported">Not supported</string>
     <string name="hid_registered">Registered</string>
     <string name="hid_not_registered">Not registered</string>
@@ -354,16 +371,18 @@
     <string name="tool_printer_title">Printers</string>
     <string name="tool_printer_desc">Find IPP printers with mDNS</string>
     <string name="lan_title">LAN Scanner</string>
-    <string name="lan_subtitle">Host and port discovery on your local subnet</string>
+    <string name="lan_subtitle">Device and port discovery on your subnet</string>
     <string name="lan_local_ip">Local IP</string>
     <string name="lan_subnet">Subnet</string>
     <string name="lan_scan">Scan subnet</string>
+    <string name="lan_vpn_warning">VPN is active. Turn it off to scan the real LAN.</string>
+    <string name="lan_scan_idle_hint">Start a scan to discover devices and open ports.</string>
     <string name="lan_scanning">Scanning %1$d/254</string>
     <string name="lan_scan_hint">%1$d hosts found. Common TCP ports are probed.</string>
     <string name="lan_no_hosts">No hosts discovered</string>
     <string name="lan_no_hosts_hint">Check Wi-Fi and try again.</string>
     <string name="lan_dns_title">DNS and TLS</string>
-    <string name="lan_dns_hint">Resolve a name and inspect the HTTPS certificate</string>
+    <string name="lan_dns_hint">Resolve a name and inspect TLS</string>
     <string name="lan_dns_host">Hostname</string>
     <string name="lan_dns_button">DNS</string>
     <string name="lan_tls_button">TLS</string>
@@ -396,7 +415,6 @@
     <string name="settings_section_personalisation">PERSONALISATION</string>
     <string name="settings_section_bottom_panel">BOTTOM PANEL</string>
     <string name="settings_section_security">SECURITY</string>
-    <string name="settings_passport">Passport</string>
     <string name="settings_performance">Performance Mode</string>
     <string name="settings_performance_hint">Disables interface animations and heavy effects for low-end devices</string>
     <string name="settings_flipper_font">Flipper Font</string>
@@ -408,7 +426,7 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_accent_color">Accent Color</string>
-    <string name="settings_accent_hint">Rainbow and four original palettes</string>
+    <string name="settings_accent_hint">Monochrome, six accents or Material You</string>
     <string name="settings_menu_view">Function menu view</string>
     <string name="settings_menu_containers">Containers</string>
     <string name="settings_menu_tiles">Tiles</string>
@@ -425,6 +443,7 @@
     <string name="settings_plugins_row_hint">Manage and verify plugins</string>
     <string name="settings_about_hint">aegisSoft · GitHub MrSpy00 · aegissoft.com.tr</string>
     <string name="ir_brands_title">Brands</string>
+    <string name="ir_remote_select">Remote</string>
     <string name="ir_categories_title">Categories</string>
     <string name="ir_import">Import .ir file</string>
     <string name="ir_import_success">%1$d signals imported</string>

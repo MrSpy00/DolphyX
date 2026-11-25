@@ -48,6 +48,7 @@ import com.aegissoft.dolphyx.R
 import com.aegissoft.dolphyx.core.security.SecurePreferences
 import com.aegissoft.dolphyx.ui.DolphyXViewModel
 import com.aegissoft.dolphyx.ui.components.DolphyEmptyState
+import com.aegissoft.dolphyx.ui.components.DolphyScreenHeader
 import com.aegissoft.dolphyx.ui.components.DolphySearchBar
 import com.aegissoft.dolphyx.ui.components.DolphyToolRow
 
@@ -105,6 +106,12 @@ fun ToolsScreen(
         contentPadding = PaddingValues(start = 20.dp, end = 20.dp, top = 6.dp, bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(if (compact) 8.dp else 12.dp),
     ) {
+        item {
+            DolphyScreenHeader(
+                title = stringResource(R.string.tools_title),
+                subtitle = stringResource(R.string.tools_subtitle),
+            )
+        }
         item {
             DolphySearchBar(
                 value = query,

@@ -8,6 +8,8 @@
 
 **Result:** 35/35 passing, 0 failures, 0 skipped.
 
+**Device verification (25 Nov 2026):** 14 routes opened on Honor Magic `PTP-N49` (Android 16 / API 36) at 100% and 130% system font scale, in Turkish and English, dark and light themes. No fatal exceptions. LAN scanning is blocked while a VPN is active to prevent virtual hosts from being reported as real devices.
+
 | Suite | Tests | Coverage |
 | :--- | :---: | :--- |
 | `IrProtocolEncoderTest` | 8 | NEC, NECext, NEC42, Samsung32, SIRC, RC5, RC6, raw |

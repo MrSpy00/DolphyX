@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DolphyX</string>
-    <string name="app_subtitle">aegisSoft Donanım ve RF Tanı Paketi</string>
+    <string name="app_subtitle">Donanım ve RF tanılaması</string>
     <string name="hce_service_description">DolphyX NFC Tip 4 Tanı Emülasyonu</string>
     <string name="hce_aid_group_description">NDEF Tip 4 Etiket Tanı AID</string>
 
@@ -38,9 +38,9 @@
     <string name="dashboard_title">Donanım Kontrol Merkezi</string>
     <string name="dashboard_device_model">Cihaz Modeli</string>
     <string name="dashboard_android_version">Android SDK</string>
-    <string name="dashboard_battery_opt">Pil Optimizasyonu</string>
-    <string name="dashboard_battery_exempt">Muaf (Kısıtlamasız)</string>
-    <string name="dashboard_battery_restricted">Kısıtlı (PowerGenie Riski)</string>
+    <string name="dashboard_battery_opt">Pil muafiyeti</string>
+    <string name="dashboard_battery_exempt">Pil muaf</string>
+    <string name="dashboard_battery_restricted">Kısıtlı (PowerGenie riski)</string>
     <string name="dashboard_request_battery_exempt">Muafiyet İste</string>
     <string name="dashboard_service_status">Donanım Servisi</string>
     <string name="dashboard_start_service">Başlat</string>
@@ -67,7 +67,13 @@
 
     <!-- NFC Ekranı -->
     <string name="nfc_title">NFC Araçları</string>
+    <string name="nfc_subtitle">Etiket oku, yaz ve emüle et</string>
     <string name="nfc_hardware_status">NFC Donanımı</string>
+    <string name="nfc_hardware_available">Donanım var</string>
+    <string name="nfc_hardware_missing">NFC donanımı yok</string>
+    <string name="nfc_adapter_on">NFC açık</string>
+    <string name="nfc_adapter_off">NFC kapalı</string>
+    <string name="nfc_hce_locked">HCE kilit ister</string>
     <string name="nfc_hce_status">HCE Emülasyonu (Kilit Açma Zorunlu)</string>
     <string name="nfc_last_tag">Son Algılanan Etiket</string>
     <string name="nfc_uid_label">UID</string>
@@ -76,7 +82,10 @@
     <string name="nfc_ndef_write_title">HCE Tanı NDEF Yükü</string>
     <string name="nfc_ndef_hint">Tanı metni veya HTTPS URL girin</string>
     <string name="nfc_apply_hce">HCE\'ye Uygula</string>
-    <string name="nfc_tap_prompt">UID, teknolojiler ve NDEF kayıtlarını incelemek için cihaza bir NFC etiketi yaklaştırın.</string>
+    <string name="nfc_waiting_title">Etiket bekleniyor</string>
+    <string name="ble_subtitle">Tarama, GATT ve bağlantı yönetimi</string>
+    <string name="ir_subtitle">Yerel veritabanı ve tuş gönderimi</string>
+    <string name="nfc_tap_prompt">UID, teknolojiler ve NDEF kayıtlarını görmek için bir NFC etiketi yaklaştırın.</string>
 
     <!-- IR Ekranı -->
     <string name="ir_title">IR Kumandalar</string>
@@ -90,15 +99,16 @@
     <string name="ir_empty_results">IRDB içinde eşleşen kumanda bulunamadı.</string>
 
     <!-- Ağ ve QR Ekranı -->
-    <string name="network_title">Ağ ve QR Tanılama</string>
+    <string name="network_title">Ağ ve QR</string>
+    <string name="network_subtitle">Ağ bilgisi, port taraması ve QR paylaşımı</string>
     <string name="network_wifi_info">Wi-Fi Arayüzü</string>
     <string name="network_ip_address">Yerel IP</string>
     <string name="network_gateway">Ağ Geçidi</string>
-    <string name="network_subnet_scan">Yerel Alt Ağ Yoklaması</string>
+    <string name="network_subnet_scan">Yerel Alt Ağ Taraması</string>
     <string name="network_qr_generator">Tanı QR Yükü</string>
     <string name="network_qr_hint">QR için metin veya HTTPS URL girin</string>
     <string name="network_generate_qr">QR Oluştur</string>
-    <string name="network_local_only_note">Düz metin HTTP küresel olarak engellidir; yalnızca 127.0.0.1 yerel döngüsüne izin verilir.</string>
+    <string name="network_local_only_note">Düz HTTP kapalı; yalnızca yerel QR sunucusuna izin verilir.</string>
 
     <!-- Eklentiler Ekranı -->
     <string name="plugins_title">Eklentiler</string>
@@ -133,7 +143,7 @@
     <string name="dialog_confirm_title">İşlemi Onayla</string>
 
     <!-- Genişletilmiş Küreselleştirme Anahtarları -->
-    <string name="network_host_label">Sunucu (Host)</string>
+    <string name="network_host_label">Sunucu</string>
     <string name="network_port_label">Port</string>
     <string name="network_https_endpoint">HTTPS Uç Noktası</string>
     <string name="network_https_check">HTTPS Kontrolü</string>
@@ -193,7 +203,7 @@
     <string name="tools_category_network">Ağ</string>
     <string name="tools_category_system">Sistem</string>
     <string name="tool_ir_title">IR Kumandalar</string>
-    <string name="tool_ir_desc">2.400+ kumanda, tuş gönderimi ve favoriler</string>
+    <string name="tool_ir_desc">Yerel IR veritabanı, tuş gönderimi ve favoriler</string>
     <string name="tool_nfc_title">NFC Araçları</string>
     <string name="tool_nfc_desc">Etiket oku, NDEF yaz, kart emüle et</string>
     <string name="tool_network_title">Ağ</string>
@@ -219,11 +229,18 @@
     <string name="appearance_accent">Vurgu rengi</string>
     <string name="appearance_accent_hint">Altı orijinal palet ve Android dinamik renk</string>
     <string name="accent_orange">Dolphy</string>
+    <string name="accent_rainbow">Gökkuşağı</string>
     <string name="accent_red">Kırmızı</string>
     <string name="accent_green">Yeşil</string>
     <string name="accent_purple">Mor</string>
     <string name="accent_cyan">Camgöbeği</string>
-    <string name="accent_adaptive">Uyarlanabilir</string>
+    <string name="accent_adaptive">Material You</string>
+    <string name="status_blocked">Kapalı</string>
+    <string name="status_allowed">Açık</string>
+    <string name="status_required">Zorunlu</string>
+    <string name="security_cleartext">Düz HTTP</string>
+    <string name="security_backup">AllowBackup</string>
+    <string name="security_hce_unlock">HCE kilit açma</string>
     <string name="appearance_text_scale">Yazı ölçeği</string>
     <string name="appearance_text_scale_hint">Her ekrana anında uygulanır</string>
     <string name="appearance_text_scale_value">%1$d%%</string>
@@ -317,7 +334,7 @@
     <string name="tool_hid_title">HID Kumanda</string>
     <string name="tool_hid_desc">Eşleşmiş PC\'de klavye, medya tuşları ve dokunmatik yüzey</string>
     <string name="hid_title">HID Kumanda</string>
-    <string name="hid_subtitle">Kendi ana bilgisayarınız için Bluetooth klavye, medya ve dokunmatik yüzey</string>
+    <string name="hid_subtitle">Eşleşmiş PC için klavye, medya ve trackpad</string>
     <string name="hid_not_supported">Desteklenmiyor</string>
     <string name="hid_registered">Kayıtlı</string>
     <string name="hid_not_registered">Kayıtlı değil</string>
@@ -325,9 +342,9 @@
     <string name="hid_registering">HID uygulaması kaydediliyor...</string>
     <string name="hid_register">HID Kaydet</string>
     <string name="hid_refresh">Yenile</string>
-    <string name="hid_hosts">Eşleşmiş ana bilgisayarlar</string>
-    <string name="hid_hosts_hint">Yalnızca bu telefonla zaten eşleşmiş cihazlar</string>
-    <string name="hid_no_hosts">Eşleşmiş ana bilgisayar yok. Önce PC\'den bu telefonu eşleştirin.</string>
+    <string name="hid_hosts">Eşleşmiş bilgisayarlar</string>
+    <string name="hid_hosts_hint">Yalnızca bu telefonla eşleşmiş cihazlar</string>
+    <string name="hid_no_hosts">Eşleşmiş bilgisayar yok. Önce PC\'den bu telefonu eşleştirin.</string>
     <string name="hid_connecting">%1$s cihazına bağlanılıyor...</string>
     <string name="hid_keyboard">Klavye</string>
     <string name="hid_text_hint">Yazılacak metin</string>
@@ -338,32 +355,34 @@
     <string name="hid_volume_down">Ses kıs</string>
     <string name="hid_trackpad">Dokunmatik yüzey</string>
     <string name="hid_trackpad_hint">İmleci hareket ettirmek için sürükleyin</string>
-    <string name="hid_no_connection">Önce bir ana bilgisayar bağlayın</string>
+    <string name="hid_no_connection">Önce bir bilgisayar bağlayın</string>
     <string name="hid_trackpad_active">Buraya sürükleyin</string>
     <string name="hid_left_click">Sol</string>
     <string name="hid_right_click">Sağ</string>
     <string name="hid_scroll">Kaydır</string>
     <string name="hid_connect">Bağlan</string>
     <string name="hid_disconnect">Bağlantıyı kes</string>
-    <string name="hid_no_host">Ana bilgisayar yok</string>
+    <string name="hid_no_host">Bilgisayar yok</string>
 
     <!-- LAN tarayıcı, DNS/TLS, IPP yazıcılar -->
     <string name="tool_lan_title">LAN Tarayıcı</string>
-    <string name="tool_lan_desc">Alt ağınızdaki ana bilgisayarları ve açık portları keşfedin</string>
+    <string name="tool_lan_desc">Alt ağınızdaki cihazları ve açık portları keşfedin</string>
     <string name="tool_printer_title">Yazıcılar</string>
     <string name="tool_printer_desc">mDNS ile IPP yazıcıları bulun</string>
     <string name="lan_title">LAN Tarayıcı</string>
-    <string name="lan_subtitle">Yerel alt ağınızda ana bilgisayar ve port keşfi</string>
+    <string name="lan_subtitle">Alt ağda cihaz ve port keşfi</string>
     <string name="lan_local_ip">Yerel IP</string>
     <string name="lan_subnet">Alt ağ</string>
     <string name="lan_scan">Alt ağı tara</string>
+    <string name="lan_vpn_warning">VPN açık. Gerçek LAN için VPN kapatılmalı.</string>
+    <string name="lan_scan_idle_hint">Cihazları ve açık portları bulmak için taramayı başlatın.</string>
     <string name="lan_scanning">Taranıyor %1$d/254</string>
-    <string name="lan_scan_hint">%1$d ana bilgisayar bulundu. Yaygın TCP portları sorgulandı.</string>
-    <string name="lan_no_hosts">Ana bilgisayar bulunamadı</string>
+    <string name="lan_scan_hint">%1$d cihaz bulundu. Yaygın TCP portları sorgulandı.</string>
+    <string name="lan_no_hosts">Cihaz bulunamadı</string>
     <string name="lan_no_hosts_hint">Wi-Fi bağlantısını kontrol edip tekrar deneyin.</string>
     <string name="lan_dns_title">DNS ve TLS</string>
-    <string name="lan_dns_hint">Bir adı çözümleyin ve HTTPS sertifikasını inceleyin</string>
-    <string name="lan_dns_host">Ana bilgisayar adı</string>
+    <string name="lan_dns_hint">Bir adı çözümle ve TLS incele</string>
+    <string name="lan_dns_host">Sunucu adı</string>
     <string name="lan_dns_button">DNS</string>
     <string name="lan_tls_button">TLS</string>
     <string name="lan_dns_result">Adresler</string>
@@ -395,7 +414,6 @@
     <string name="settings_section_personalisation">KİŞİSELLEŞTİRME</string>
     <string name="settings_section_bottom_panel">ALT PANEL</string>
     <string name="settings_section_security">GÜVENLİK</string>
-    <string name="settings_passport">Pasaport</string>
     <string name="settings_performance">Performans Modu</string>
     <string name="settings_performance_hint">Düşük güçlü cihazlarda arayüz animasyonlarını ve ağır efektleri kapatır</string>
     <string name="settings_flipper_font">Flipper Yazı Tipi</string>
@@ -407,7 +425,7 @@
     <string name="settings_theme_dark">Koyu</string>
     <string name="settings_theme_light">Açık</string>
     <string name="settings_accent_color">Vurgu Rengi</string>
-    <string name="settings_accent_hint">Gökkuşağı ve dört orijinal palet</string>
+    <string name="settings_accent_hint">Monokrom, altı vurgu veya Material You</string>
     <string name="settings_menu_view">İşlev menüsü görünümü</string>
     <string name="settings_menu_containers">Kapsayıcılar</string>
     <string name="settings_menu_tiles">Kutular</string>
@@ -424,6 +442,7 @@
     <string name="settings_plugins_row_hint">Eklentileri yönet ve doğrula</string>
     <string name="settings_about_hint">aegisSoft · GitHub MrSpy00 · aegissoft.com.tr</string>
     <string name="ir_brands_title">Markalar</string>
+    <string name="ir_remote_select">Kumanda</string>
     <string name="ir_categories_title">Kategoriler</string>
     <string name="ir_import">.ir dosyası içe aktar</string>
     <string name="ir_import_success">%1$d sinyal içe aktarıldı</string>

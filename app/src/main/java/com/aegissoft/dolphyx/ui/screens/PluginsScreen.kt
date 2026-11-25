@@ -1,4 +1,4 @@
-package com.aegissoft.dolphyx.ui.screens
+﻿package com.aegissoft.dolphyx.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.VerifiedUser
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -108,7 +107,7 @@ fun PluginsScreen(
                 ) {
                     Text(text = stringResource(R.string.action_confirm))
                 }
-                FilledTonalButton(
+                OutlinedButton(
                     onClick = {
                         jsonInput = ""
                         testResult = null
@@ -157,7 +156,7 @@ fun PluginsScreen(
                                 fontWeight = FontWeight.SemiBold,
                             )
                             Text(
-                                text = "${manifest.id} • ${manifest.author}",
+                                text = "${manifest.id} â€¢ ${manifest.author}",
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

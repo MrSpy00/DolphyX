@@ -63,6 +63,7 @@ import com.aegissoft.dolphyx.engine.ir.IrFileImporter
 import com.aegissoft.dolphyx.data.IrSignal
 import com.aegissoft.dolphyx.ui.DolphyXViewModel
 import com.aegissoft.dolphyx.ui.components.DolphyEmptyState
+import com.aegissoft.dolphyx.ui.components.DolphyFilterDropdown
 import com.aegissoft.dolphyx.ui.components.DolphyScreenHeader
 import com.aegissoft.dolphyx.ui.components.DolphySegmentedPill
 import com.aegissoft.dolphyx.ui.components.DolphySearchBar
@@ -108,11 +109,7 @@ fun IrRemoteScreen(viewModel: DolphyXViewModel, onBack: () -> Unit) {
         item {
             DolphyScreenHeader(
                 title = stringResource(R.string.ir_title),
-                subtitle = irStatusMessage ?: if (hasEmitter) {
-                    stringResource(R.string.status_supported)
-                } else {
-                    stringResource(R.string.ir_no_hardware)
-                },
+                subtitle = stringResource(R.string.ir_subtitle),
                 onBack = onBack,
             )
         }
@@ -224,53 +221,29 @@ private fun androidx.compose.foundation.lazy.LazyListScope.browseContent(
     }
 
     item {
+        val allCategories = stringResource(R.string.ir_categories_all)
+        val categoryLabels = categories.associateWith { irCategoryLabel(it) }
         DolphyXCard {
-            Text(
-                text = stringResource(R.string.ir_categories_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item {
-                    FilterChip(
-                        selected = selectedCategory == null,
-                        onClick = { viewModel.selectIrCategory(null) },
-                        label = { Text(text = stringResource(R.string.ir_categories_all)) },
-                        colors = irChipColors(),
-                        border = null,
-                    )
-                }
-                items(categories) { cat ->
-                    FilterChip(
-                        selected = selectedCategory == cat,
-                        onClick = { viewModel.selectIrCategory(cat) },
-                        label = { Text(text = irCategoryLabel(cat)) },
-                        colors = irChipColors(),
-                        border = null,
-                    )
-                }
-            }
-            if (brands.isNotEmpty()) {
-                Text(
-                    text = stringResource(R.string.ir_brands_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(brands) { brand ->
-                        FilterChip(
-                            selected = selectedBrand == brand,
-                            onClick = { viewModel.selectIrBrand(brand) },
-                            label = { Text(text = brand) },
-                            colors = irChipColors(),
-                            border = null,
-                        )
+            DolphyFilterDropdown(
+                label = stringResource(R.string.ir_categories_title),
+                value = selectedCategory?.let { categoryLabels[it] ?: it } ?: allCategories,
+                options = listOf(allCategories) + categoryLabels.values,
+                onSelect = { chosen ->
+                    if (chosen == allCategories) {
+                        viewModel.selectIrCategory(null)
+                    } else {
+                        categoryLabels.entries.firstOrNull { it.value == chosen }?.key
+                            ?.let(viewModel::selectIrCategory)
                     }
-                }
+                },
+            )
+            if (brands.isNotEmpty()) {
+                DolphyFilterDropdown(
+                    label = stringResource(R.string.ir_brands_title),
+                    value = selectedBrand ?: brands.first(),
+                    options = brands,
+                    onSelect = viewModel::selectIrBrand,
+                )
             }
         }
     }
@@ -288,19 +261,14 @@ private fun androidx.compose.foundation.lazy.LazyListScope.browseContent(
     } else {
         item {
             DolphyXCard {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    items(remotes, key = { it.id }) { remote ->
-                        FilterChip(
-                            selected = selectedRemote?.id == remote.id,
-                            onClick = { viewModel.selectIrRemote(remote) },
-                            label = { Text(text = "${remote.model} (${remote.signalCount})") },
-                            colors = irChipColors(),
-                            border = null,
-                        )
-                    }
-                }
+                DolphyFilterDropdown(
+                    label = stringResource(R.string.ir_remote_select),
+                    value = selectedRemote?.let(::remoteLabel) ?: remoteLabel(remotes.first()),
+                    options = remotes.map(::remoteLabel),
+                    onSelect = { chosen ->
+                        remotes.firstOrNull { remoteLabel(it) == chosen }?.let(viewModel::selectIrRemote)
+                    },
+                )
             }
         }
     }
@@ -309,11 +277,20 @@ private fun androidx.compose.foundation.lazy.LazyListScope.browseContent(
     if (currentRemote != null && signals.isNotEmpty()) {
         item {
             IrKeypadCard(
-                remoteTitle = "${currentRemote.brand} ${currentRemote.model}",
+                remoteTitle = remoteLabel(currentRemote),
                 signals = signals,
                 onTransmit = { viewModel.transmitIrSignal(it) },
             )
         }
+    }
+}
+
+private fun remoteLabel(remote: IrRemoteSummary): String {
+    val model = remote.model
+    return if (model.startsWith(remote.brand, ignoreCase = true)) {
+        model
+    } else {
+        "${remote.brand} $model"
     }
 }
 

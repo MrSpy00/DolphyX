@@ -91,7 +91,7 @@ fun NetworkQrScreen(
         item {
             DolphyScreenHeader(
                 title = stringResource(R.string.network_title),
-                subtitle = stringResource(R.string.network_local_only_note),
+                subtitle = stringResource(R.string.network_subtitle),
                 onBack = onBack,
             )
         }

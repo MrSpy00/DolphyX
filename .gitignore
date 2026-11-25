@@ -40,3 +40,5 @@ desktop.ini
 # Local signing material and IDE scratch
 keystore/
 
+shots/
+$tmp/

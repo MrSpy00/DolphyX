@@ -181,7 +181,10 @@ fun CastScreen(onBack: () -> Unit) {
                         overflow = TextOverflow.Ellipsis,
                     )
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
                     DolphyPrimaryPillButton(
                         text = stringResource(R.string.cast_action),
                         icon = Icons.Rounded.Cast,
@@ -230,7 +233,7 @@ fun CastScreen(onBack: () -> Unit) {
                         },
                         shape = RoundedCornerShape(999.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant,
-                        modifier = Modifier.size(64.dp),
+                        modifier = Modifier.size(56.dp),
                     ) {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,

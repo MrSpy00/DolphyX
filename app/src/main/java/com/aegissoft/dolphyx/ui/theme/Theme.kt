@@ -1,16 +1,22 @@
 package com.aegissoft.dolphyx.ui.theme
 
+import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -53,12 +59,15 @@ enum class DolphyAccent {
     RED,
     GREEN,
     PURPLE,
+    CYAN,
+    DYNAMIC,
 }
 
 val DolphyAccentOrange = Color(0xFFFF6B1A)
 val DolphyAccentRed = Color(0xFFF2545B)
 val DolphyAccentGreen = Color(0xFF7BE3A0)
 val DolphyAccentPurple = Color(0xFFC455F7)
+val DolphyAccentCyan = Color(0xFF56CCF2)
 
 val DolphyRainbowColors = listOf(
     Color(0xFFFF6B1A),
@@ -75,6 +84,8 @@ fun DolphyAccent.solidColor(): Color = when (this) {
     DolphyAccent.RED -> DolphyAccentRed
     DolphyAccent.GREEN -> DolphyAccentGreen
     DolphyAccent.PURPLE -> DolphyAccentPurple
+    DolphyAccent.CYAN -> DolphyAccentCyan
+    DolphyAccent.DYNAMIC -> DolphyWhite
 }
 
 private data class AccentTokens(val primary: Color, val secondary: Color, val container: Color)
@@ -85,6 +96,8 @@ private fun darkTokens(accent: DolphyAccent): AccentTokens = when (accent) {
     DolphyAccent.RED -> AccentTokens(Color(0xFFFFB3B7), Color(0xFFFFD6D8), Color(0xFF40171A))
     DolphyAccent.GREEN -> AccentTokens(Color(0xFFA9F0C4), Color(0xFFD2F8E0), Color(0xFF133424))
     DolphyAccent.PURPLE -> AccentTokens(Color(0xFFE3B5FF), Color(0xFFF1D8FF), Color(0xFF331A40))
+    DolphyAccent.CYAN -> AccentTokens(Color(0xFF8CE8F5), Color(0xFFB8F4FB), Color(0xFF0E2E33))
+    DolphyAccent.DYNAMIC -> AccentTokens(DolphyWhite, DolphyMuted, Color(0xFF3A3A3A))
 }
 
 private fun lightTokens(accent: DolphyAccent): AccentTokens = when (accent) {
@@ -93,6 +106,8 @@ private fun lightTokens(accent: DolphyAccent): AccentTokens = when (accent) {
     DolphyAccent.RED -> AccentTokens(Color(0xFFB3262E), Color(0xFF8B1D23), Color(0xFFFFDADC))
     DolphyAccent.GREEN -> AccentTokens(Color(0xFF146C3E), Color(0xFF0F5430), Color(0xFFD7F5E3))
     DolphyAccent.PURPLE -> AccentTokens(Color(0xFF7B2AA0), Color(0xFF5C1F79), Color(0xFFF0DCFA))
+    DolphyAccent.CYAN -> AccentTokens(Color(0xFF006874), Color(0xFF004F57), Color(0xFFD0F7FF))
+    DolphyAccent.DYNAMIC -> AccentTokens(Color(0xFF141414), Color(0xFF666663), Color(0xFFE8E8E4))
 }
 
 private fun darkScheme(accent: DolphyAccent) = darkTokens(accent).let { t ->
@@ -152,6 +167,41 @@ private fun lightScheme(accent: DolphyAccent) = lightTokens(accent).let { t ->
     )
 }
 
+/**
+ * Material You colours keep the Dolphy monochrome canvas and take only the accent
+ * roles from the system wallpaper palette.
+ */
+private fun dynamicScheme(context: Context, dark: Boolean): ColorScheme {
+    val base = if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    return if (dark) {
+        base.copy(
+            background = DolphyBlack,
+            onBackground = DolphyWhite,
+            surface = DolphyCard,
+            onSurface = DolphyWhite,
+            surfaceVariant = DolphyCardHigh,
+            onSurfaceVariant = DolphyMuted,
+            surfaceContainer = DolphyCard,
+            surfaceContainerHigh = DolphyCardHigh,
+            surfaceContainerLow = DolphyCardSoft,
+            outline = DolphyLine,
+        )
+    } else {
+        base.copy(
+            background = DolphyLightBg,
+            onBackground = DolphyLightText,
+            surface = DolphyLightCard,
+            onSurface = DolphyLightText,
+            surfaceVariant = Color(0xFFECECE8),
+            onSurfaceVariant = DolphyLightMuted,
+            surfaceContainer = DolphyLightCard,
+            surfaceContainerHigh = Color(0xFFF0F0EC),
+            surfaceContainerLow = Color(0xFFF7F7F4),
+            outline = DolphyLightLine,
+        )
+    }
+}
+
 /** Global motion gate used by the pixel banner and transitions. */
 val LocalDolphyReduceMotion = staticCompositionLocalOf { false }
 
@@ -167,7 +217,13 @@ fun DolphyXTheme(
     flipperFont: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = if (darkTheme) darkScheme(accent) else lightScheme(accent)
+    val context = LocalContext.current
+    val colorScheme = when {
+        accent == DolphyAccent.DYNAMIC && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            dynamicScheme(context, darkTheme)
+        darkTheme -> darkScheme(accent)
+        else -> lightScheme(accent)
+    }
     val displayFamily = if (flipperFont) DolphyDisplayFont else FontFamily.SansSerif
 
     val typography = remember(displayFamily) {
@@ -202,8 +258,8 @@ fun DolphyXTheme(
 
     val density = LocalDensity.current
     val scaledDensity = remember(density, uiScale) {
-        val scale = uiScale.coerceIn(0.85f, 1.25f)
-        Density(density.density * scale, density.fontScale)
+        val scale = uiScale.coerceIn(0.85f, 1.35f)
+        Density(density.density, density.fontScale * scale)
     }
 
     CompositionLocalProvider(

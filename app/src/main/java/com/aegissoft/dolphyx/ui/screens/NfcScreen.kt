@@ -117,7 +117,7 @@ fun NfcScreen(viewModel: DolphyXViewModel, onBack: () -> Unit) {
         item {
             DolphyScreenHeader(
                 title = stringResource(R.string.nfc_title),
-                subtitle = stringResource(R.string.nfc_hardware_status),
+                subtitle = stringResource(R.string.nfc_subtitle),
                 onBack = onBack,
             )
         }
@@ -134,17 +134,17 @@ fun NfcScreen(viewModel: DolphyXViewModel, onBack: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 DolphyXStatusBadge(
-                    label = if (nfcSupported) stringResource(R.string.status_supported) else stringResource(R.string.status_unsupported),
+                    label = if (nfcSupported) stringResource(R.string.nfc_hardware_available) else stringResource(R.string.nfc_hardware_missing),
                     active = nfcSupported,
                     icon = Icons.Rounded.Nfc,
                 )
                 DolphyXStatusBadge(
-                    label = if (nfcEnabled) stringResource(R.string.status_active) else stringResource(R.string.status_unavailable),
+                    label = if (nfcEnabled) stringResource(R.string.nfc_adapter_on) else stringResource(R.string.nfc_adapter_off),
                     active = nfcEnabled,
                     icon = Icons.Rounded.Contactless,
                 )
                 DolphyXStatusBadge(
-                    label = stringResource(R.string.settings_hce_unlock),
+                    label = stringResource(R.string.nfc_hce_locked),
                     active = true,
                     icon = Icons.Rounded.Lock,
                 )
@@ -163,8 +163,8 @@ fun NfcScreen(viewModel: DolphyXViewModel, onBack: () -> Unit) {
                         val tag = lastTag
                         if (tag == null) {
                             DolphyEmptyState(
-                                title = stringResource(R.string.nfc_tap_prompt),
-                                subtitle = stringResource(R.string.nfc_no_tag_hint),
+                                title = stringResource(R.string.nfc_waiting_title),
+                                subtitle = stringResource(R.string.nfc_tap_prompt),
                                 icon = Icons.Rounded.Contactless,
                             )
                         } else {

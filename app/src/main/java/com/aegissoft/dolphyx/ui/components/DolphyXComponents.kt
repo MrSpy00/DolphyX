@@ -1,10 +1,13 @@
-package com.aegissoft.dolphyx.ui.components
+﻿package com.aegissoft.dolphyx.ui.components
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,14 +19,22 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -34,20 +45,25 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aegissoft.dolphyx.ui.theme.DolphyMuted
 import com.aegissoft.dolphyx.ui.theme.DolphyNumericFont
+import com.aegissoft.dolphyx.ui.theme.LocalDolphyReduceMotion
 
 /** Big rounded card. Monochrome, no border: the visual weight does the grouping. */
 @Composable
@@ -109,13 +125,17 @@ fun DolphyScreenHeader(
                 color = MaterialTheme.colorScheme.onBackground,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
+                autoSize = TextAutoSize.StepBased(
+                    minFontSize = 18.sp,
+                    maxFontSize = 26.sp,
+                ),
             )
             if (!subtitle.isNullOrBlank()) {
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -205,7 +225,7 @@ fun DolphyXStatusBadge(
                 text = label,
                 style = MaterialTheme.typography.labelMedium,
                 color = if (active) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
         }
@@ -261,36 +281,59 @@ fun DolphySegmentedPill(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollable = options.size > 4
+    val rowModifier = modifier
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(999.dp))
+        .padding(5.dp)
+        .then(if (scrollable) Modifier.horizontalScroll(rememberScrollState()) else Modifier)
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(999.dp))
-            .padding(5.dp),
+        modifier = rowModifier,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         options.forEachIndexed { index, label ->
-            val selected = index == selectedIndex
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp)
-                    .background(
-                        if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
-                        RoundedCornerShape(999.dp),
-                    )
-                    .clickable { onSelect(index) },
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelLarge,
-                    color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    softWrap = false,
-                    overflow = TextOverflow.Ellipsis,
-                )
+            val segmentModifier = if (scrollable) {
+                Modifier.widthIn(min = 92.dp)
+            } else {
+                Modifier.weight(1f)
             }
+            SegmentButton(
+                label = label,
+                selected = index == selectedIndex,
+                onClick = { onSelect(index) },
+                modifier = segmentModifier,
+            )
         }
+    }
+}
+
+@Composable
+private fun SegmentButton(
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .heightIn(min = 48.dp)
+            .background(
+                if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
+                RoundedCornerShape(999.dp),
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelLarge,
+            color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            softWrap = false,
+            overflow = TextOverflow.Ellipsis,
+            autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 14.sp),
+        )
     }
 }
 
@@ -322,7 +365,7 @@ fun DolphyFloatingDock(
         Surface(
             shape = RoundedCornerShape(999.dp),
             color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.weight(1f, fill = false),
+            modifier = Modifier.weight(1f),
         ) {
             Row(
                 modifier = Modifier.padding(6.dp),
@@ -333,21 +376,19 @@ fun DolphyFloatingDock(
                     val selected = selectedRoute == item.route
                     Row(
                         modifier = Modifier
-                            .animateContentSize()
                             .background(
                                 if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
                                 RoundedCornerShape(999.dp),
                             )
                             .clickable { onSelect(item.route) }
-                            .padding(horizontal = if (selected) 18.dp else 14.dp, vertical = 14.dp),
+                            .padding(horizontal = if (selected) 14.dp else 12.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(9.dp),
                     ) {
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
                             tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.size(22.dp),
+                            modifier = Modifier.size(20.dp),
                         )
                         if (selected) {
                             Text(
@@ -357,6 +398,9 @@ fun DolphyFloatingDock(
                                 color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1,
                                 softWrap = false,
+                                overflow = TextOverflow.Ellipsis,
+                                autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 15.sp),
+                                modifier = Modifier.padding(start = 9.dp),
                             )
                         }
                     }
@@ -399,10 +443,12 @@ fun DolphyPrimaryPillButton(
         color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surfaceVariant,
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp),
+            .heightIn(min = 64.dp),
     ) {
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
@@ -420,8 +466,10 @@ fun DolphyPrimaryPillButton(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = if (enabled) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
+                maxLines = 2,
+                textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
+                autoSize = TextAutoSize.StepBased(minFontSize = 13.sp, maxFontSize = 17.sp),
             )
         }
     }
@@ -577,11 +625,25 @@ fun DolphyToolRow(
     accent: Color = MaterialTheme.colorScheme.onSurface,
     badge: String? = null,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val reduceMotion = LocalDolphyReduceMotion.current
+    val scale by animateFloatAsState(
+        targetValue = if (pressed && !reduceMotion) 0.985f else 1f,
+        animationSpec = tween(120),
+        label = "tool-press",
+    )
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            },
         onClick = onClick,
         shape = RoundedCornerShape(28.dp),
         color = MaterialTheme.colorScheme.surface,
+        interactionSource = interactionSource,
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp),
@@ -594,14 +656,15 @@ fun DolphyToolRow(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
+                    autoSize = TextAutoSize.StepBased(minFontSize = 14.sp, maxFontSize = 17.sp),
                 )
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 3,
+                    maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -655,8 +718,10 @@ fun DolphyValueRow(
             style = MaterialTheme.typography.bodyMedium,
             fontFamily = FontFamily.Monospace,
             color = valueColor,
-            maxLines = 2,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1.1f),
         )
     }
 }
@@ -698,12 +763,14 @@ fun DolphyEmptyState(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = subtitle,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 3,
+            maxLines = 4,
             overflow = TextOverflow.Ellipsis,
         )
     }
@@ -720,4 +787,76 @@ fun DolphyMutedText(text: String, modifier: Modifier = Modifier) {
         maxLines = 3,
         overflow = TextOverflow.Ellipsis,
     )
+}
+
+/**
+ * Compact selector used by the IR browser. A dropdown keeps long category,
+ * brand and remote names fully readable instead of clipping horizontal chips.
+ */
+@Composable
+fun DolphyFilterDropdown(
+    label: String,
+    value: String,
+    options: List<String>,
+    onSelect: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    val expanded = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Box {
+            Surface(
+                onClick = { if (enabled) expanded.value = true },
+                enabled = enabled,
+                shape = RoundedCornerShape(18.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Text(
+                        text = value,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowDropDown,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+            DropdownMenu(
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = option,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        },
+                        onClick = {
+                            expanded.value = false
+                            onSelect(option)
+                        },
+                    )
+                }
+            }
+        }
+    }
 }

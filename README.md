@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" width="128" height="128" alt="DolphyX logo" />
+  <img src="assets/logo.png" width="128" height="128" alt="DolphyX logo" />
 </p>
 
 <h1 align="center">DolphyX</h1>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MrSpy00/DolphyX/releases"><img src="https://img.shields.io/badge/Release-v2.1.0-F4F4F4?style=for-the-badge&logo=android&logoColor=0A0A0A" alt="Release v2.1.0"></a>
+  <a href="https://github.com/MrSpy00/DolphyX/releases"><img src="https://img.shields.io/badge/Release-v2.2.0-F4F4F4?style=for-the-badge&logo=android&logoColor=0A0A0A" alt="Release v2.2.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--3.0-2A2A2A?style=for-the-badge" alt="License GPL-3.0"></a>
   <a href="https://developer.android.com/about/versions/16"><img src="https://img.shields.io/badge/Android-8.0_to_16+_(API_36)-3D3D3D?style=for-the-badge&logo=android&logoColor=F4F4F4" alt="Android API 26-36"></a>
   <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.2-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin 2.2"></a>
@@ -67,7 +67,7 @@ Uygulama; kök (root) gerektirmeden BLE, kızılötesi, NFC, Bluetooth HID, yere
 - **Kişiselleştirme:** 5 vurgu (Rainbow varsayılan, Orange, Red, Green, Purple), Flipper pixel font, %85–135 arayüz ölçeği, reduce motion, Functions Containers/Tiles ve Standard/Compact.
 - **Pixel sanat:** Aseprite ile üretilen maskot ve banner (`px_dolphin.png`, `px_scene.png`).
 - **Erişilebilirlik:** Edge-to-edge + `safeDrawingPadding()`, 48dp dokunma hedefleri, kesilmeyen metinler, sıfır emoji.
-- **Diller:** Türkçe ve İngilizce tam string eşitliği (517 anahtar).
+- **Diller:** Türkçe ve İngilizce tam string eşitliği (536 anahtar).
 
 ## Savunmacı Kapsam
 
@@ -96,7 +96,7 @@ cd DolphyX
 Çıktılar:
 
 - `app/build/outputs/apk/debug/app-debug.apk`
-- `app/build/outputs/apk/release/app-release-unsigned.apk`
+- `app/build/outputs/apk/release/app-release.apk`
 
 Kurulum:
 
@@ -179,7 +179,7 @@ The app brings BLE, infrared, NFC, Bluetooth HID, local networking, IPP printing
 - **Personalisation:** 5 accents (Rainbow default, Orange, Red, Green, Purple), Flipper pixel font, 85–135% UI scale, reduce motion, Functions Containers/Tiles and Standard/Compact styles.
 - **Pixel art:** Aseprite-generated mascot and banner (`px_dolphin.png`, `px_scene.png`).
 - **Accessibility:** Edge-to-edge + `safeDrawingPadding()`, 48dp touch targets, no clipped text, zero emoji.
-- **Languages:** Full Turkish and English string parity (517 keys).
+- **Languages:** Full Turkish and English string parity (536 keys).
 
 ## Defensive Scope
 
@@ -208,7 +208,7 @@ cd DolphyX
 Outputs:
 
 - `app/build/outputs/apk/debug/app-debug.apk`
-- `app/build/outputs/apk/release/app-release-unsigned.apk`
+- `app/build/outputs/apk/release/app-release.apk`
 
 Install:
 

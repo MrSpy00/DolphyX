@@ -1,5 +1,13 @@
-package com.aegissoft.dolphyx.ui.screens
+﻿package com.aegissoft.dolphyx.ui.screens
 
+import android.content.pm.PackageManager
+import android.os.Build
+import android.security.NetworkSecurityPolicy
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,12 +19,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Extension
+import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -26,11 +39,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,12 +64,13 @@ import com.aegissoft.dolphyx.ui.components.DolphyToolRow
 import com.aegissoft.dolphyx.ui.components.DolphyValueRow
 import com.aegissoft.dolphyx.ui.components.DolphyXCard
 import com.aegissoft.dolphyx.ui.theme.DolphyAccent
+import com.aegissoft.dolphyx.ui.theme.DolphyAccentCyan
 import com.aegissoft.dolphyx.ui.theme.DolphyAccentGreen
 import com.aegissoft.dolphyx.ui.theme.DolphyAccentOrange
 import com.aegissoft.dolphyx.ui.theme.DolphyAccentPurple
 import com.aegissoft.dolphyx.ui.theme.DolphyAccentRed
 import com.aegissoft.dolphyx.ui.theme.DolphyRainbowColors
-import com.aegissoft.dolphyx.ui.theme.DolphyWhite
+import com.aegissoft.dolphyx.ui.theme.LocalDolphyReduceMotion
 
 @Composable
 fun SettingsScreen(
@@ -73,6 +89,12 @@ fun SettingsScreen(
     val menuView by viewModel.menuView.collectAsState()
     val menuStyle by viewModel.menuStyle.collectAsState()
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
+    val reduceMotionSetting by viewModel.reduceMotion.collectAsState()
+    val allowBackup = remember(context) {
+        context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_ALLOW_BACKUP != 0
+    }
+    val cleartextAllowed = remember { NetworkSecurityPolicy.getInstance().isCleartextTrafficPermitted }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -90,16 +112,14 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(18.dp),
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.px_dolphin),
-                        contentDescription = stringResource(R.string.nav_home),
-                        modifier = Modifier.size(96.dp),
-                    )
+                    AnimatedDolphin(reduceMotion = reduceMotionSetting)
                     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Text(
-                            text = stringResource(R.string.settings_passport),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            text = DolphyXConfig.appBrand,
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                         Text(
                             text = stringResource(R.string.app_name),
@@ -109,6 +129,7 @@ fun SettingsScreen(
                         Text(
                             text = stringResource(R.string.settings_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
                             style = MaterialTheme.typography.bodySmall,
+                            fontFamily = com.aegissoft.dolphyx.ui.theme.DolphyNumericFont,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -196,23 +217,13 @@ fun SettingsScreen(
                 Slider(
                     value = uiScale,
                     onValueChange = { viewModel.setUiScale(it) },
-                    valueRange = 0.85f..1.25f,
-                    steps = 7,
+                    valueRange = 0.85f..1.35f,
+                    steps = 9,
                     colors = SliderDefaults.colors(
                         thumbColor = MaterialTheme.colorScheme.onSurface,
                         activeTrackColor = MaterialTheme.colorScheme.onSurface,
                         inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
                     ),
-                )
-            }
-        }
-
-        item {
-            DolphyXCard {
-                DolphySwitchRow(
-                    title = stringResource(R.string.settings_cyclic_animation),
-                    checked = !reduceMotion,
-                    onCheckedChange = { viewModel.setReduceMotion(!it) },
                 )
             }
         }
@@ -260,40 +271,76 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(vertical = 2.dp),
                 ) {
-                    AccentSwatch(
-                        selected = accent == SecurePreferences.ACCENT_RAINBOW,
-                        brush = Brush.linearGradient(DolphyRainbowColors),
-                        onClick = { viewModel.setAccent(SecurePreferences.ACCENT_RAINBOW) },
-                        modifier = Modifier.weight(1f),
-                    )
-                    AccentSwatch(
-                        selected = accent == SecurePreferences.ACCENT_ORANGE,
-                        brush = SolidColor(DolphyAccentOrange),
-                        onClick = { viewModel.setAccent(SecurePreferences.ACCENT_ORANGE) },
-                        modifier = Modifier.weight(1f),
-                    )
-                    AccentSwatch(
-                        selected = accent == SecurePreferences.ACCENT_RED,
-                        brush = SolidColor(DolphyAccentRed),
-                        onClick = { viewModel.setAccent(SecurePreferences.ACCENT_RED) },
-                        modifier = Modifier.weight(1f),
-                    )
-                    AccentSwatch(
-                        selected = accent == SecurePreferences.ACCENT_GREEN,
-                        brush = SolidColor(DolphyAccentGreen),
-                        onClick = { viewModel.setAccent(SecurePreferences.ACCENT_GREEN) },
-                        modifier = Modifier.weight(1f),
-                    )
-                    AccentSwatch(
-                        selected = accent == SecurePreferences.ACCENT_PURPLE,
-                        brush = SolidColor(DolphyAccentPurple),
-                        onClick = { viewModel.setAccent(SecurePreferences.ACCENT_PURPLE) },
-                        modifier = Modifier.weight(1f),
-                    )
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_rainbow),
+                            selected = accent == SecurePreferences.ACCENT_RAINBOW,
+                            brush = Brush.linearGradient(DolphyRainbowColors),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_RAINBOW) },
+                        )
+                    }
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_orange),
+                            selected = accent == SecurePreferences.ACCENT_ORANGE,
+                            brush = SolidColor(DolphyAccentOrange),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_ORANGE) },
+                        )
+                    }
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_red),
+                            selected = accent == SecurePreferences.ACCENT_RED,
+                            brush = SolidColor(DolphyAccentRed),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_RED) },
+                        )
+                    }
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_green),
+                            selected = accent == SecurePreferences.ACCENT_GREEN,
+                            brush = SolidColor(DolphyAccentGreen),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_GREEN) },
+                        )
+                    }
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_purple),
+                            selected = accent == SecurePreferences.ACCENT_PURPLE,
+                            brush = SolidColor(DolphyAccentPurple),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_PURPLE) },
+                        )
+                    }
+                    item {
+                        AccentSwatch(
+                            label = stringResource(R.string.accent_cyan),
+                            selected = accent == SecurePreferences.ACCENT_CYAN,
+                            brush = SolidColor(DolphyAccentCyan),
+                            onClick = { viewModel.setAccent(SecurePreferences.ACCENT_CYAN) },
+                        )
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        item {
+                            AccentSwatch(
+                                label = stringResource(R.string.accent_adaptive),
+                                selected = accent == SecurePreferences.ACCENT_DYNAMIC,
+                                brush = Brush.sweepGradient(
+                                    listOf(
+                                        Color(0xFF7BE3A0),
+                                        Color(0xFF56CCF2),
+                                        Color(0xFFC455F7),
+                                        Color(0xFFF2545B),
+                                        Color(0xFF7BE3A0),
+                                    ),
+                                ),
+                                onClick = { viewModel.setAccent(SecurePreferences.ACCENT_DYNAMIC) },
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -376,9 +423,22 @@ fun SettingsScreen(
 
         item {
             DolphyXCard {
-                SecurityRow(stringResource(R.string.settings_cleartext_blocked))
-                SecurityRow(stringResource(R.string.settings_backup_disabled))
-                SecurityRow(stringResource(R.string.settings_hce_unlock))
+                SecurityRow(
+                    label = stringResource(R.string.security_cleartext),
+                    value = stringResource(
+                        if (cleartextAllowed) R.string.status_allowed else R.string.status_blocked,
+                    ),
+                )
+                SecurityRow(
+                    label = stringResource(R.string.security_backup),
+                    value = stringResource(
+                        if (allowBackup) R.string.status_allowed else R.string.status_blocked,
+                    ),
+                )
+                SecurityRow(
+                    label = stringResource(R.string.security_hce_unlock),
+                    value = stringResource(R.string.status_required),
+                )
             }
         }
 
@@ -424,31 +484,44 @@ private fun SectionLabel(text: String) {
 
 @Composable
 private fun AccentSwatch(
+    label: String,
     selected: Boolean,
     brush: Brush,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .size(56.dp)
-            .background(brush, RoundedCornerShape(20.dp))
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
+    Column(
+        modifier = Modifier.width(64.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        if (selected) {
-            Icon(
-                imageVector = Icons.Rounded.Check,
-                contentDescription = null,
-                tint = DolphyWhite,
-                modifier = Modifier.size(24.dp),
-            )
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .background(brush, RoundedCornerShape(20.dp))
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) {
+            if (selected) {
+                Icon(
+                    imageVector = Icons.Rounded.Check,
+                    contentDescription = null,
+                    tint = Color(0xFF0A0A0A),
+                    modifier = Modifier.size(24.dp),
+                )
+            }
         }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
 @Composable
-private fun SecurityRow(text: String) {
+private fun SecurityRow(label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -461,11 +534,40 @@ private fun SecurityRow(text: String) {
             modifier = Modifier.size(16.dp),
         )
         Text(
-            text = text,
+            text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
         )
     }
+}
+
+/** Two-frame pixel dolphin bob; a small piece of the Aseprite identity in the UI. */
+@Composable
+private fun AnimatedDolphin(reduceMotion: Boolean) {
+    val transition = rememberInfiniteTransition(label = "dolphin")
+    val offset = transition.animateFloat(
+        initialValue = -3f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 2200),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "dolphin-bob",
+    )
+    Image(
+        painter = painterResource(id = R.drawable.px_logo),
+        contentDescription = stringResource(R.string.nav_home),
+        modifier = Modifier
+            .size(96.dp)
+            .offset(y = if (reduceMotion) 0.dp else offset.value.dp),
+    )
 }

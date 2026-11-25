@@ -90,11 +90,7 @@ fun BleScreen(
         item {
             DolphyScreenHeader(
                 title = stringResource(R.string.ble_title),
-                subtitle = statusMessage ?: if (adapterEnabled) {
-                    stringResource(R.string.status_ready)
-                } else {
-                    stringResource(R.string.ble_adapter_disabled)
-                },
+                subtitle = stringResource(R.string.ble_subtitle),
                 onBack = onBack,
             )
         }

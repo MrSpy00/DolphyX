@@ -43,7 +43,17 @@ class SecurePreferences(
     const val ACCENT_RED = "red"
     const val ACCENT_GREEN = "green"
     const val ACCENT_PURPLE = "purple"
-    val ACCENTS = setOf(ACCENT_RAINBOW, ACCENT_ORANGE, ACCENT_RED, ACCENT_GREEN, ACCENT_PURPLE)
+    const val ACCENT_CYAN = "cyan"
+    const val ACCENT_DYNAMIC = "dynamic"
+    val ACCENTS = setOf(
+        ACCENT_RAINBOW,
+        ACCENT_ORANGE,
+        ACCENT_RED,
+        ACCENT_GREEN,
+        ACCENT_PURPLE,
+        ACCENT_CYAN,
+        ACCENT_DYNAMIC,
+    )
 
     const val FAB_ACTION_FUNCTIONS = "functions"
     const val FAB_ACTION_SETTINGS = "settings"

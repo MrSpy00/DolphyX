@@ -1,5 +1,8 @@
 package com.aegissoft.dolphyx.ui.screens
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -34,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +50,7 @@ import com.aegissoft.dolphyx.engine.network.LanHost
 import com.aegissoft.dolphyx.engine.network.LanScannerEngine
 import com.aegissoft.dolphyx.engine.network.TlsCertificateInfo
 import com.aegissoft.dolphyx.ui.components.DolphyEmptyState
+import com.aegissoft.dolphyx.ui.components.DolphyPrimaryPillButton
 import com.aegissoft.dolphyx.ui.components.DolphyScreenHeader
 import com.aegissoft.dolphyx.ui.components.DolphyValueRow
 import com.aegissoft.dolphyx.ui.components.DolphyXCard
@@ -59,7 +64,13 @@ import kotlinx.coroutines.withContext
 fun LanScannerScreen(onBack: () -> Unit) {
     val engine = remember { LanScannerEngine() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val vpnActive = remember(context) {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        cm?.getNetworkCapabilities(cm.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
+    }
     var scanning by remember { mutableStateOf(false) }
+    var scanned by remember { mutableStateOf(false) }
     var progress by remember { mutableIntStateOf(0) }
     var hosts by remember { mutableStateOf<List<LanHost>>(emptyList()) }
     var dnsHost by remember { mutableStateOf(DolphyXConfig.appWebsite) }
@@ -106,43 +117,44 @@ fun LanScannerScreen(onBack: () -> Unit) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Button(
+                DolphyPrimaryPillButton(
+                    text = if (scanning) {
+                        stringResource(R.string.lan_scanning, progress)
+                    } else {
+                        stringResource(R.string.lan_scan)
+                    },
+                    icon = Icons.Rounded.Radar,
+                    enabled = !scanning && !vpnActive,
                     onClick = {
-                        if (scanning) return@Button
+                        if (scanning || vpnActive) return@DolphyPrimaryPillButton
                         scanning = true
                         progress = 0
                         hosts = emptyList()
                         scope.launch {
                             val result = engine.scan(onProgress = { progress = it })
                             hosts = result
+                            scanned = true
                             scanning = false
                         }
                     },
-                    enabled = !scanning,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Icon(imageVector = Icons.Rounded.Radar, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = if (scanning) {
-                            stringResource(R.string.lan_scanning, progress)
-                        } else {
-                            stringResource(R.string.lan_scan)
-                        },
-                    )
-                }
+                )
                 if (scanning) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 }
                 Text(
-                    text = stringResource(R.string.lan_scan_hint, hosts.size),
+                    text = when {
+                        vpnActive -> stringResource(R.string.lan_vpn_warning)
+                        scanning -> stringResource(R.string.lan_scanning, progress)
+                        scanned -> stringResource(R.string.lan_scan_hint, hosts.size)
+                        else -> stringResource(R.string.lan_scan_idle_hint)
+                    },
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (vpnActive) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }
 
-        if (!scanning && hosts.isEmpty()) {
+        if (!scanning && scanned && hosts.isEmpty()) {
             item {
                 DolphyXCard {
                     DolphyEmptyState(
