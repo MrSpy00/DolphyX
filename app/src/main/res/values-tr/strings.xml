@@ -53,6 +53,9 @@
     <!-- BLE Ekranı -->
     <string name="ble_title">BLE ve GATT Denetleyici</string>
     <string name="ble_bonded_devices">Eşleşmiş Cihazlar</string>
+    <string name="ble_filter_all">Tümü</string>
+    <string name="ble_filter_bonded">Eşleşmiş</string>
+    <string name="ble_filter_live">Yakındaki</string>
     <string name="ble_discovered_devices">Bulunan BLE Cihazları</string>
     <string name="ble_start_scan">BLE Taramayı Başlat</string>
     <string name="ble_stop_scan">Taramayı Durdur</string>
@@ -157,6 +160,7 @@
     <string name="network_https_http_result">HTTP %1$d (%2$d ms)</string>
     <string name="network_https_failed">HTTPS kontrolü başarısız</string>
     <string name="nfc_vault_title">AES-256-GCM NFC Kasası (%1$d)</string>
+    <string name="plugins_meta_format">%1$s · %2$s</string>
     <string name="plugins_json_label">.dolphyxplugin JSON</string>
     <string name="plugins_sha_prefix">SHA-256: %1$s...</string>
     <string name="ir_transmit_failed">IR gönderimi başarısız</string>

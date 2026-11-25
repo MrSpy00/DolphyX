@@ -1,4 +1,4 @@
-package com.aegissoft.dolphyx.ui.screens
+﻿package com.aegissoft.dolphyx.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,6 @@ import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -49,6 +48,7 @@ import com.aegissoft.dolphyx.engine.ble.BleDeviceItem
 import com.aegissoft.dolphyx.ui.DolphyXViewModel
 import com.aegissoft.dolphyx.ui.components.DolphyXCard
 import com.aegissoft.dolphyx.ui.components.DolphyScreenHeader
+import com.aegissoft.dolphyx.ui.components.DolphySegmentedPill
 import com.aegissoft.dolphyx.ui.components.DolphyXSectionHeader
 import com.aegissoft.dolphyx.ui.components.DolphyXStatusBadge
 
@@ -122,8 +122,6 @@ fun BleScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
-
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -172,33 +170,26 @@ fun BleScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    FilterChip(
-                        selected = activeFilter == BleFilter.ALL,
-                        onClick = { activeFilter = BleFilter.ALL },
-                        label = { Text(text = "${stringResource(R.string.ir_categories_all)} (${devices.size})") },
-                    )
-                    FilterChip(
-                        selected = activeFilter == BleFilter.BONDED,
-                        onClick = { activeFilter = BleFilter.BONDED },
-                        label = {
-                            Text(
-                                text = "${stringResource(R.string.ble_bonded_devices)} (${devices.count { it.isBonded }})",
-                            )
-                        },
-                    )
-                    FilterChip(
-                        selected = activeFilter == BleFilter.LIVE,
-                        onClick = { activeFilter = BleFilter.LIVE },
-                        label = { Text(text = stringResource(R.string.ble_discovered_devices)) },
-                    )
-                }
+                val filterLabels = listOf(
+                    stringResource(R.string.ble_filter_all),
+                    stringResource(R.string.ble_filter_bonded),
+                    stringResource(R.string.ble_filter_live),
+                )
+                DolphySegmentedPill(
+                    options = filterLabels,
+                    selectedIndex = when (activeFilter) {
+                        BleFilter.ALL -> 0
+                        BleFilter.BONDED -> 1
+                        BleFilter.LIVE -> 2
+                    },
+                    onSelect = { index ->
+                        activeFilter = when (index) {
+                            1 -> BleFilter.BONDED
+                            2 -> BleFilter.LIVE
+                            else -> BleFilter.ALL
+                        }
+                    },
+                )
             }
         }
 

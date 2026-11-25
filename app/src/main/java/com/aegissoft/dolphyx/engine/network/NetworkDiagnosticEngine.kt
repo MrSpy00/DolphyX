@@ -60,24 +60,44 @@ class NetworkDiagnosticEngine(private val context: Context) {
             )
         }
 
-        val network = cm.activeNetwork
+        val activeNetwork = cm.activeNetwork
+        val activeCaps = activeNetwork?.let { cm.getNetworkCapabilities(it) }
+        val vpnActive = activeCaps?.hasTransport(NetworkCapabilities.TRANSPORT_VPN) == true
+        // Under a VPN the active link is the tunnel (10.x, tun0). Report the real
+        // physical interface instead, otherwise LAN tools show a fake address.
+        val physicalNetwork = if (vpnActive) {
+            cm.allNetworks.firstOrNull { candidate ->
+                val caps = cm.getNetworkCapabilities(candidate) ?: return@firstOrNull false
+                caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    !caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN) &&
+                    (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                        caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) ||
+                        caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR))
+            }
+        } else {
+            activeNetwork
+        }
+
+        val network = physicalNetwork
         val caps = network?.let { cm.getNetworkCapabilities(it) }
         val linkProps = network?.let { cm.getLinkProperties(it) }
 
         val isConnected = caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
         val transportType = when {
             caps == null -> "None"
+            vpnActive -> "VPN"
             caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> "Wi-Fi"
             caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> "Cellular"
             caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> "Ethernet"
-            caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> "VPN"
             else -> "Other"
         }
+        val fallbackProps = activeNetwork?.let { cm.getLinkProperties(it) }
+        val effectiveProps = if (linkProps?.interfaceName?.startsWith("tun") == true) fallbackProps else linkProps
 
-        val addresses = linkProps?.linkAddresses?.mapNotNull { it.address }.orEmpty()
+        val addresses = effectiveProps?.linkAddresses?.mapNotNull { it.address }.orEmpty()
         val ipv4 = addresses.firstOrNull { it is Inet4Address && !it.isLoopbackAddress }?.hostAddress
         val ipv6 = addresses.firstOrNull { it is Inet6Address && !it.isLoopbackAddress }?.hostAddress
-        val dnsServers = linkProps?.dnsServers?.mapNotNull { it.hostAddress }.orEmpty()
+        val dnsServers = effectiveProps?.dnsServers?.mapNotNull { it.hostAddress }.orEmpty()
 
         return NetworkSnapshot(
             isConnected = isConnected,
@@ -85,7 +105,7 @@ class NetworkDiagnosticEngine(private val context: Context) {
             localIpv4 = ipv4,
             localIpv6 = ipv6,
             dnsServers = dnsServers,
-            interfaceName = linkProps?.interfaceName,
+            interfaceName = effectiveProps?.interfaceName,
             linkDownKbps = caps?.linkDownstreamBandwidthKbps ?: 0,
             linkUpKbps = caps?.linkUpstreamBandwidthKbps ?: 0
         )

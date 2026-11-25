@@ -3,14 +3,15 @@
 import android.content.pm.PackageManager
 import android.os.Build
 import android.security.NetworkSecurityPolicy
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Palette
@@ -45,10 +47,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -454,17 +458,13 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                Text(
-                    text = DolphyXConfig.appWebsite,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.clickable { uriHandler.openUri("https://${DolphyXConfig.appWebsite}") },
+                LinkRow(
+                    label = DolphyXConfig.appWebsite,
+                    onClick = { uriHandler.openUri("https://${DolphyXConfig.appWebsite}") },
                 )
-                Text(
-                    text = DolphyXConfig.githubUrl,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.clickable { uriHandler.openUri(DolphyXConfig.githubUrl) },
+                LinkRow(
+                    label = DolphyXConfig.githubUrl,
+                    onClick = { uriHandler.openUri(DolphyXConfig.githubUrl) },
                 )
             }
         }
@@ -482,6 +482,38 @@ private fun SectionLabel(text: String) {
     )
 }
 
+/** Full-row external link with a proper touch target instead of a bare text tap. */
+@Composable
+private fun LinkRow(label: String, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(18.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.OpenInNew,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(18.dp),
+            )
+        }
+    }
+}
+
 @Composable
 private fun AccentSwatch(
     label: String,
@@ -489,32 +521,49 @@ private fun AccentSwatch(
     brush: Brush,
     onClick: () -> Unit,
 ) {
+    val scale by animateFloatAsState(
+        targetValue = if (selected) 1f else 0.94f,
+        animationSpec = tween(220, easing = FastOutSlowInEasing),
+        label = "swatch-scale",
+    )
     Column(
         modifier = Modifier.width(64.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
-        Box(
+        Surface(
+            onClick = onClick,
+            shape = RoundedCornerShape(20.dp),
+            color = Color.Transparent,
             modifier = Modifier
                 .size(56.dp)
-                .background(brush, RoundedCornerShape(20.dp))
-                .clickable(onClick = onClick),
-            contentAlignment = Alignment.Center,
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                },
         ) {
-            if (selected) {
-                Icon(
-                    imageVector = Icons.Rounded.Check,
-                    contentDescription = null,
-                    tint = Color(0xFF0A0A0A),
-                    modifier = Modifier.size(24.dp),
-                )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(brush),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (selected) {
+                    Icon(
+                        imageVector = Icons.Rounded.Check,
+                        contentDescription = null,
+                        tint = Color(0xFF0A0A0A),
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
         }
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
+            color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
     }

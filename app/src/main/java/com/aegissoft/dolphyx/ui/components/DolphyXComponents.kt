@@ -1,11 +1,12 @@
 ﻿package com.aegissoft.dolphyx.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -301,7 +302,7 @@ fun DolphySegmentedPill(
                 label = label,
                 selected = index == selectedIndex,
                 onClick = { onSelect(index) },
-                modifier = segmentModifier,
+                modifier = segmentModifier.animateContentSize(tween(220)),
             )
         }
     }
@@ -314,26 +315,37 @@ private fun SegmentButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .background(
-                if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
-                RoundedCornerShape(999.dp),
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        contentAlignment = Alignment.Center,
+    val background by animateColorAsState(
+        targetValue = if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
+        animationSpec = tween(240),
+        label = "segment-background",
+    )
+    val labelColor by animateColorAsState(
+        targetValue = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+        animationSpec = tween(240),
+        label = "segment-label",
+    )
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(999.dp),
+        color = background,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        modifier = modifier.heightIn(min = 48.dp),
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelLarge,
-            color = if (selected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
-            maxLines = 1,
-            softWrap = false,
-            overflow = TextOverflow.Ellipsis,
-            autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 14.sp),
-        )
+        Box(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = labelColor,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                autoSize = TextAutoSize.StepBased(minFontSize = 8.sp, maxFontSize = 14.sp),
+            )
+        }
     }
 }
 
@@ -364,7 +376,11 @@ fun DolphyFloatingDock(
     ) {
         Surface(
             shape = RoundedCornerShape(999.dp),
-            color = MaterialTheme.colorScheme.surface,
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+            border = BorderStroke(
+                1.dp,
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+            ),
             modifier = Modifier.weight(1f),
         ) {
             Row(
@@ -374,34 +390,43 @@ fun DolphyFloatingDock(
             ) {
                 items.forEach { item ->
                     val selected = selectedRoute == item.route
-                    Row(
-                        modifier = Modifier
-                            .background(
-                                if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
-                                RoundedCornerShape(999.dp),
-                            )
-                            .clickable { onSelect(item.route) }
-                            .padding(horizontal = if (selected) 14.dp else 12.dp, vertical = 14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                    val slotColor by animateColorAsState(
+                        targetValue = if (selected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f) else Color.Transparent,
+                        animationSpec = tween(240),
+                        label = "dock-slot",
+                    )
+                    // Equal-weight slots: the hit area under a finger never moves
+                    // when selection changes, only the highlight and label appear.
+                    Surface(
+                        onClick = { onSelect(item.route) },
+                        shape = RoundedCornerShape(999.dp),
+                        color = slotColor,
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.weight(if (selected) 1.7f else 1f),
                     ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.label,
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.size(20.dp),
-                        )
-                        if (selected) {
-                            Text(
-                                text = item.label,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                maxLines = 1,
-                                softWrap = false,
-                                overflow = TextOverflow.Ellipsis,
-                                autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 15.sp),
-                                modifier = Modifier.padding(start = 9.dp),
+                        Row(
+                            modifier = Modifier.padding(vertical = 14.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center,
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.label,
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.size(20.dp),
                             )
+                            if (selected) {
+                                Text(
+                                    text = item.label,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 15.sp),
+                                    modifier = Modifier.padding(start = 6.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -411,7 +436,11 @@ fun DolphyFloatingDock(
             Surface(
                 onClick = onFabClick,
                 shape = RoundedCornerShape(20.dp),
-                color = MaterialTheme.colorScheme.surface,
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                ),
                 modifier = Modifier.size(64.dp),
             ) {
                 Box(contentAlignment = Alignment.Center) {

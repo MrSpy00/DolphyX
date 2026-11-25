@@ -53,6 +53,9 @@
     <!-- BLE Screen -->
     <string name="ble_title">BLE &amp; GATT Inspector</string>
     <string name="ble_bonded_devices">Bonded Devices</string>
+    <string name="ble_filter_all">All</string>
+    <string name="ble_filter_bonded">Bonded</string>
+    <string name="ble_filter_live">Nearby</string>
     <string name="ble_discovered_devices">Discovered BLE Devices</string>
     <string name="ble_start_scan">Start BLE Scan</string>
     <string name="ble_stop_scan">Stop Scan</string>
@@ -157,6 +160,7 @@
     <string name="network_https_http_result">HTTP %1$d (%2$d ms)</string>
     <string name="network_https_failed">HTTPS check failed</string>
     <string name="nfc_vault_title">AES-256-GCM NFC Vault (%1$d)</string>
+    <string name="plugins_meta_format">%1$s · %2$s</string>
     <string name="plugins_json_label">.dolphyxplugin JSON</string>
     <string name="plugins_sha_prefix">SHA-256: %1$s...</string>
     <string name="ir_transmit_failed">IR transmit failed</string>

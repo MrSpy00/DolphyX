@@ -156,7 +156,11 @@ fun PluginsScreen(
                                 fontWeight = FontWeight.SemiBold,
                             )
                             Text(
-                                text = "${manifest.id} â€¢ ${manifest.author}",
+                                text = stringResource(
+                                    R.string.plugins_meta_format,
+                                    manifest.id,
+                                    manifest.author,
+                                ),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )

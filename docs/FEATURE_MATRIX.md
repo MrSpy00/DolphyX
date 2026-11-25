@@ -1,6 +1,6 @@
-# Feature Matrix
+﻿# Feature Matrix
 
-Status legend: **Complete** Â· **Partial** Â· **Planned** Â· **Out of scope (defensive)**
+Status legend: **Complete** Ã‚Â· **Partial** Ã‚Â· **Planned** Ã‚Â· **Out of scope (defensive)**
 
 | Area | Feature | Status | Module |
 | :--- | :--- | :---: | :--- |
@@ -8,7 +8,7 @@ Status legend: **Complete** Â· **Partial** Â· **Planned** Â· **Out of scop
 | Design | Monochrome OLED, 28dp cards, white pills, pixel art | Complete | `Theme.kt`, `DolphyXComponents.kt` |
 | Personalisation | 5 accents, pixel font, UI scale, reduce motion | Complete | `SettingsScreen`, `Theme.kt` |
 | Functions | Containers/Tiles, Standard/Compact | Complete | `ToolsScreen` |
-| Localisation | Turkish + English, 536 keys | Complete | `values/`, `values-tr/` |
+| Localisation | Turkish + English, 540 keys | Complete | `values/`, `values-tr/` |
 | BLE | Scan, bonded-first, RSSI, OUI, GATT | Complete | `BleDiagnosticEngine` |
 | Chat | BLE GATT nearby chat | Complete | `BleChatEngine`, `ChatScreen` |
 | IR | 2,460 remotes / 58,766 signals, 45 categories | Complete | `IrDatabaseHelper`, `IrRemoteScreen` |
@@ -31,7 +31,7 @@ Status legend: **Complete** Â· **Partial** Â· **Planned** Â· **Out of scop
 | Widget | IR/NFC/app shortcuts | Complete | `DolphyXQuickWidgetProvider` |
 | Smart home | ELK-BLEDOM LED strip | Planned | Protocol needs hardware validation |
 | Scooter | Read-only telemetry | Planned | Protocol needs hardware validation |
-| Security | BLE spam/jammer, TWS hijack, BadUSB, phishing, brute force, unrestricted code execution | Out of scope | â€” |
+| Security | BLE spam/jammer, TWS hijack, BadUSB, phishing, brute force, unrestricted code execution | Out of scope | Ã¢â‚¬â€ |
 | Security | IR jammer category | Out of scope | Filtered from IRDB queries |
 
 ## Known limits

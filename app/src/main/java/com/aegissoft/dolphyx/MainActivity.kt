@@ -15,9 +15,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -89,6 +92,8 @@ object DolphyRoutes {
 
     val primary = setOf(HOME, TOOLS, SETTINGS)
 }
+
+private val primaryRoutes = DolphyRoutes.primary
 
 private val dockItems = listOf(
     Triple(DolphyRoutes.HOME, R.string.nav_home, Icons.Rounded.Bluetooth),
@@ -241,6 +246,15 @@ private fun DolphyXAppShell(
         DolphyRoutes.SETTINGS -> DolphyRoutes.SETTINGS
         else -> DolphyRoutes.TOOLS
     }
+    // Dock taps must always land on the tapped tab: pop everything above the
+    // start destination first, then navigate without restoring a saved stack.
+    val navigatePrimary: (String) -> Unit = { route ->
+        navController.navigate(route) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = false }
+            launchSingleTop = true
+            restoreState = false
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -253,17 +267,11 @@ private fun DolphyXAppShell(
                     DolphyDockItem(route = route, label = stringResource(labelRes), icon = icon)
                 },
                 selectedRoute = primarySelection,
-                onSelect = { route ->
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
+                onSelect = navigatePrimary,
                 fabIcon = if (fabAction == SecurePreferences.FAB_ACTION_SETTINGS) Icons.Rounded.Settings else Icons.Rounded.Extension,
                 onFabClick = {
                     val target = if (fabAction == SecurePreferences.FAB_ACTION_SETTINGS) DolphyRoutes.SETTINGS else DolphyRoutes.TOOLS
-                    navController.navigate(target) { launchSingleTop = true }
+                    navigatePrimary(target)
                 },
                 fabContentDescription = stringResource(
                     if (fabAction == SecurePreferences.FAB_ACTION_SETTINGS) R.string.nav_settings else R.string.nav_tools,
@@ -281,23 +289,39 @@ private fun DolphyXAppShell(
                 navController = navController,
                 startDestination = DolphyRoutes.HOME,
                 enterTransition = {
-                    if (reduceMotion) {
-                        EnterTransition.None
-                    } else {
-                        fadeIn(tween(220)) + slideInHorizontally(tween(220)) { it / 14 }
+                    val tabSwitch = targetState.destination.route in primaryRoutes ||
+                        initialState.destination.route in primaryRoutes
+                    when {
+                        reduceMotion -> EnterTransition.None
+                        tabSwitch -> fadeIn(tween(260, easing = FastOutSlowInEasing)) +
+                            scaleIn(tween(280, easing = FastOutSlowInEasing), initialScale = 0.94f)
+                        else -> fadeIn(tween(240, easing = FastOutSlowInEasing)) +
+                            slideInHorizontally(tween(300, easing = FastOutSlowInEasing)) { it / 8 }
                     }
                 },
                 exitTransition = {
-                    if (reduceMotion) ExitTransition.None else fadeOut(tween(150))
+                    val tabSwitch = targetState.destination.route in primaryRoutes ||
+                        initialState.destination.route in primaryRoutes
+                    when {
+                        reduceMotion -> ExitTransition.None
+                        tabSwitch -> fadeOut(tween(180, easing = FastOutSlowInEasing)) +
+                            scaleOut(tween(200, easing = FastOutSlowInEasing), targetScale = 1.04f)
+                        else -> fadeOut(tween(180, easing = FastOutSlowInEasing)) +
+                            slideOutHorizontally(tween(260, easing = FastOutSlowInEasing)) { -it / 12 }
+                    }
                 },
                 popEnterTransition = {
-                    if (reduceMotion) EnterTransition.None else fadeIn(tween(200))
+                    when {
+                        reduceMotion -> EnterTransition.None
+                        else -> fadeIn(tween(240, easing = FastOutSlowInEasing)) +
+                            slideInHorizontally(tween(300, easing = FastOutSlowInEasing)) { -it / 8 }
+                    }
                 },
                 popExitTransition = {
-                    if (reduceMotion) {
-                        ExitTransition.None
-                    } else {
-                        fadeOut(tween(150)) + slideOutHorizontally(tween(200)) { it / 14 }
+                    when {
+                        reduceMotion -> ExitTransition.None
+                        else -> fadeOut(tween(180, easing = FastOutSlowInEasing)) +
+                            slideOutHorizontally(tween(260, easing = FastOutSlowInEasing)) { it / 12 }
                     }
                 },
             ) {
